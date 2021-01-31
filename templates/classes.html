@@ -1,0 +1,20 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>All Available Classes - Select query against Classes table</h1>
+    <p>Clicking Enroll will add row to enrollments table</p>
+
+<table>
+    {% for key, value in data.items() %}
+        <tr>
+            <td>
+                <p> {{ value }}</p>
+                <button value="{{ key }}" name="key">Enroll</button>
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 300px;
+  position: fixed;
+  background: tan;
+  height: 100%;
+  overflow: auto;
+
+}
+
+.sidebar a {
+  display: block;
+  padding: 8
+}
+
+.mainbody {
+    margin-left: 310px;
+    font-size: 14px
+}

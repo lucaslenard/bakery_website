@@ -1,0 +1,110 @@
+from flask import Flask, render_template
+from flask import request, redirect
+# from db_connector.db_connector import connect_to_database, execute_query
+
+
+app = Flask(__name__)
+
+
+# Render homepage/index
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/all_products')
+def load_products():
+    #Load up all products form database
+
+    items = {
+        "donuts": "Donuts",
+        "bread": "Bread",
+        "hamburger_buns": "Hamburger Buns",
+        "kringle": "Racine Kringle",
+        "hot_dog_buns": "Hot Dog Buns"
+    }
+
+    return render_template('products.html', data=items)
+
+
+@app.route('/classes')
+def load_classes():
+    items = {
+        "bakery_101": "Beginner Baking 101",
+        "bakery_102": "Beginner Baking 102",
+        "bakery_201": "Intermediate Baking 201",
+        "bakery_301": "Advanced Baking 301"
+    }
+    return render_template('classes.html', data=items)
+
+
+@app.route('/login_register')
+def user_login_register():
+    return render_template('login.html')
+
+
+@app.route('/class_enrollments')
+def enrolled_classes():
+    items = {
+        "bakery_101": "Beginner Baking 101",
+        "bakery_301": "Advanced Baking 301"
+    }
+    return render_template('enrolled_classes.html', data=items)
+
+
+@app.route('/shopping_cart')
+def cart():
+    items = {
+        "donuts": "Donuts",
+        "bread": "Bread",
+        "hamburger_buns": "Hamburger Buns"
+    }
+    return render_template('shopping_cart.html', data=items)
+
+
+@app.route('/previous_orders')
+def orders():
+    # Add in links to orders and utilize redirect with the order_id
+    orders = {
+        "00001": "Order 00001 on 1/12/21 for 3 items",
+        "00002": "Order 00002 on 1/14/21 for 2 items"
+    }
+    return render_template('order_history.html', data=orders)
+
+
+@app.route('/payment_information')
+def payment_info():
+
+    card_info = {
+        "card_holder_name": "Lucas Test",
+        "card_number": "123454321",
+        "security_number": "270",
+        "expiration_date": "2022-01-01"
+    }
+    return render_template('payment_info.html', data=card_info)
+
+
+@app.route('/address_information')
+def address_info():
+    address_info = {
+        "recipient_name": "Lucas Test",
+        "street_address": "100 Test Ave.",
+        "city": "Testing Village",
+        "state": "Test Virginia",
+        "zip": "00011"
+    }
+    return render_template('address_info.html', data=address_info)
+
+
+    # db_connection = connect_to_database()
+    # drop_table = "DROP TABLE IF EXISTS diagnostic;"
+    # create_table = "CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);"
+    # insert_row = "INSERT INTO diagnostic (text) VALUES ('MySQL is Working!');"
+    # query = "SELECT * FROM diagnostic;"
+    # execute_query(db_connection, drop_table);
+    # execute_query(db_connection, create_table);
+    # execute_query(db_connection, insert_row);
+    # values = execute_query(db_connection, query).fetchall();
+    #
+    # return render_template('home.html', results=values)
+

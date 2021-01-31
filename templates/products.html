@@ -1,0 +1,21 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>All Bakery Items - Select query against Items table</h1>
+    <p>Clicking Add to Cart will add to customers session and doesn't utilize a database table</p>
+
+<table>
+    {% for key, value in data.items() %}
+        <tr>
+            <td>
+                <p> {{ value }}</p>
+                <input type="text" size="8" placeholder="1" name="Quantity"/>
+                <button value="{{ key }}" name="key">Add to Cart</button>
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

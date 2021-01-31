@@ -1,0 +1,28 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>All Products currently added to Shopping Cart - loaded from users session</h1>
+    <p>Clicking Checkout will add a row in orders for the overall order and will add rows to order_items equal to the
+        number of unique items purchased. Clicking remove Item will remove from the session</p>
+
+<table>
+    {% for key, value in data.items() %}
+        <tr>
+            <td>
+                {{ value }}
+                <p>Price: $1.00</p>
+                <input type="text" size="8" placeholder="1" name="Quantity"/>
+                <form>
+                    <button value="{{ key }}" name="key">Remove Item</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+<br>
+<button value="checkout" name="checkout">Checkout</button>
+
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>All Previous Orders - Select query against orders table which will display the overview for each order</h1>
+    <p>Clicking View Order Information will load a seperate page with all the order items for that order pulled in from
+    the order_items table</p>
+
+
+<table>
+    {% for key, value in data.items() %}
+        <tr>
+            <td>
+                {{ value }}
+                <form>
+                    <button value="{{ key }}" name="key">View Order Information</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

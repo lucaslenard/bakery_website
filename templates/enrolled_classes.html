@@ -1,0 +1,23 @@
+{% extends "sidebar.html" %}
+
+
+{% block content %}
+
+    <h1>All Classes signed up for - Select query against Enrollments table</h1>
+    <p>Clicking Drop Class will remove the row from the enrollments table</p>
+
+<table>
+    {% for key, value in data.items() %}
+        <tr>
+            <td>
+                {{ value }}
+                <form>
+                    <button value="{{ key }}" name="key">Drop Class</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

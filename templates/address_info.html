@@ -1,0 +1,49 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+    <h1>All saved addresses - Select query against addresses table</h1>
+    <p>If the user isn't logged in, they will not see any saved addresses. Clicking select address will select that info
+        to ship the order. Selecting add address will add to addresses if the user is logged in</p>
+
+<table>
+    {% for key, value in data.items() %}
+        <tr>
+            <td>
+                {{ value }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<form>
+    <button value="{{ key }}" name="key">Select Shipping Address</button>
+</form>
+
+
+<div class="add_address_information">
+    <h1>Add Address Information</h1>
+    <form class ="add_address_information" action method="POST" enctype="text/plain">
+        <label for>Recipient Full Name:</label>
+        <input type="text" name="recipient_name" value>
+        <br>
+        <br>
+        <label for>Street Address:</label>
+        <input type="text" name="street_address" value>
+        <br>
+        <br>
+        <label for>City:</label>
+        <input type="text" name="city" value>
+        <br>
+        <br>
+        <label for>State:</label>
+        <input type="text" name="state" value>
+        <br>
+        <br>
+        <label for>Zip:</label>
+        <input type="text" name="zip_code" value>
+        <br>
+        <br>
+        <input type="submit" name>
+    </form>
+</div>
+{% endblock %}

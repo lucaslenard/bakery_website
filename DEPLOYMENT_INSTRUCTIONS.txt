@@ -1,0 +1,18 @@
+-Clone Github Repo
+
+-Activate virtual environment:
+    Activate the environment
+    
+    On Mac:
+   
+    $ . venv/bin/activate
+    
+    On Windows:
+
+    > venv\Scripts\activate
+    
+    Your shell prompt will change to show the name of the activated environment.
+    For more help activating the environment, see: https://flask.palletsprojects.com/en/1.1.x/installation/
+
+- In the command line: flask run
+- This final step shoukd deploy the app to  http://127.0.0.1:5000/
