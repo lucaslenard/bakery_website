@@ -1,0 +1,31 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>Admin Edit All Customer Enrollments - Select query against enrollments table, classes and customers table</h1>
+
+<table>
+    <tr>
+        <th>Class Name</th>
+        <th>Customer First Name</th>
+        <th>Customer Last Name</th>
+        <th>Class Date</th>
+        <th>Instructor</th>
+        <th>Course Result</th>
+        <th>Actions</th>
+    </tr>
+        <tr>
+            <td>Baking 101</td>
+            <td>Test</td>
+            <td>McTest</td>
+            <td>1/12/21</td>
+            <td>Teacher Example</td>
+            <td>Completed</td>
+            <td>
+                <button value="edit_enrollment" name="key">Edit Enrollment</button>
+                <button value="delete_enrollment" name="key">Delete Enrollment</button>
+            </td>
+        </tr>
+</table>
+
+{% endblock %}

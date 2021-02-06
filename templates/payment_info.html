@@ -7,40 +7,43 @@
 
 
 <table>
+    <tr>
+        <th>Full Name</th>
+        <th>Card Number</th>
+        <th>Security Number</th>
+        <th>Card Expiration Date</th>
+        <th>Actions</th>
+    </tr>
     {% for key, value in data.items() %}
         <tr>
+            <td>Test User</td>
+            <td>12341234</td>
+            <td>111</td>
+            <td>2021-02-01</td>
             <td>
-                {{ value }}
+                <button value="{{ key }}" name="key">Select Payment</button>
+                <button value="{{ key }}" name="key">Edit Payment</button>
+                <button value="{{ key }}" name="key">Remove Payment</button>
             </td>
         </tr>
     {% endfor %}
+        <tr>
+            <td>
+                <input type="text" name="customer_name" value>
+            </td>
+            <td>
+                <input type="number" name="card_name" value>
+            </td>
+            <td>
+                <input type="number" name="security_name" value>
+            </td>
+            <td>
+                <input type="date" name="expiration_date" value>
+            </td>
+            <td>
+                <button value="add_payment" name="add_button">Add Payment</button>
+            </td>
+        </tr>
 </table>
 
-<form>
-    <button value="{{ key }}" name="key">Select Payment</button>
-</form>
-
-
-<div class="add_payment_information">
-    <h1>Add Payment Information</h1>
-    <form class ="add_payment_information" action method="POST" enctype="text/plain">
-        <label for>Customer Full Name:</label>
-        <input type="text" name="customer_name" value>
-        <br>
-        <br>
-        <label for>Credit/Debit Card Number:</label>
-        <input type="number" name="card_name" value>
-        <br>
-        <br>
-        <label for>Card Security Number:</label>
-        <input type="number" name="security_name" value>
-        <br>
-        <br>
-        <label for>Card Expiration Date:</label>
-        <input type="date" name="expiration_date" value>
-        <br>
-        <br>
-        <input type="submit" name>
-    </form>
-</div>
 {% endblock %}

@@ -1,0 +1,56 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>Admin Edit All Users - Select query against classes table</h1>
+
+<table>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Email</th>
+        <th>Admin</th>
+        <th>Actions</th>
+    </tr>
+        <tr>
+            <td>Test</td>
+            <td>McTest</td>
+            <td>CoolUser101</td>
+            <td>secure_password11</td>
+            <td>test@aol.com</td>
+            <td>
+                <input type="checkbox" disabled="disabled">
+            </td>
+            <td>
+                <button value="edit_user" name="key">Edit User</button>
+                <button value="delete_user" name="key">Delete User</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" name="first_name" value>
+            </td>
+            <td>
+                <input type="text" name="last_name" value>
+            </td>
+            <td>
+                <input type="text" name="username" value>
+            </td>
+            <td>
+                <input type="text" name="password" value>
+            </td>
+            <td>
+                <input type="text" name="email" value>
+            </td>
+            <td>
+                <input type="checkbox" name="admin" value>
+            </td>
+            <td>
+                <button value="add_user" name="add_user">Add User</button>
+            </td>
+        </tr>
+</table>
+
+{% endblock %}

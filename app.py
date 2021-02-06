@@ -96,6 +96,30 @@ def address_info():
     return render_template('address_info.html', data=address_info)
 
 
+@app.route('/edit_accounts')
+def admin_edit_accounts():
+    return render_template('edit_accounts.html')
+
+
+@app.route('/edit_products')
+def admin_edit_products():
+    return render_template('edit_products.html')
+
+
+@app.route('/edit_classes')
+def admin_edit_classes():
+    return render_template('edit_classes.html')
+
+
+@app.route('/edit_orders')
+def admin_edit_orders():
+    return render_template('edit_orders.html')
+
+
+@app.route('/edit_enrollments')
+def admin_edit_enrollments():
+    return render_template('edit_enrollments.html')
+
     # db_connection = connect_to_database()
     # drop_table = "DROP TABLE IF EXISTS diagnostic;"
     # create_table = "CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);"

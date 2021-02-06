@@ -7,22 +7,28 @@
         number of unique items purchased. Clicking remove Item will remove from the session</p>
 
 <table>
+    <tr>
+        <th>Item Name</th>
+        <th>Vendor</th>
+        <th>Cost</th>
+        <th>Quantity in Cart</th>
+        <th>Action(s)</th>
+    </tr>
     {% for key, value in data.items() %}
         <tr>
+            <td>{{ value }}</td>
+            <td>Acme Inc</td>
+            <td>$1.54</td>
+            <td>1</td>
             <td>
-                {{ value }}
-                <p>Price: $1.00</p>
-                <input type="text" size="8" placeholder="1" name="Quantity"/>
-                <form>
-                    <button value="{{ key }}" name="key">Remove Item</button>
-                </form>
+                <button value="{{ key }}" name="key">Update Item</button>
             </td>
         </tr>
     {% endfor %}
+
 </table>
-<br>
+
 <br>
 <button value="checkout" name="checkout">Checkout</button>
-
 
 {% endblock %}

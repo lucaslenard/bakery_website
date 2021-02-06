@@ -2,32 +2,33 @@
 
 {% block content %}
 
-    <h1>All Previous Orders - Select query against orders table which will display the overview for each order</h1>
-    <p>Clicking View Order Information will load a separate page with all the order items for that order pulled in from
-    the order_items table</p>
-
+    <h1>Admin Edit All Customer Orders - Select query against orders table and customers table</h1>
 
 <table>
     <tr>
         <th>Order Number</th>
+        <th>Customer First Name</th>
+        <th>Customer Last Name</th>
         <th>Ordered Date</th>
         <th>Total Cost</th>
         <th>Number of Items</th>
         <th>Fulfilled</th>
         <th>Actions</th>
     </tr>
-    {% for key, value in data.items() %}
         <tr>
             <td>1134</td>
+            <td>Test</td>
+            <td>McTest</td>
             <td>1/12/21</td>
             <td>$10233</td>
             <td>3</td>
             <td>No</td>
             <td>
-                <button value="{{ key }}" name="key">View Order Items</button>
+                <button value="view_order_items" name="key">View Order Items</button>
+                <button value="edit_order" name="key">Edit Order</button>
+                <button value="delete_order" name="key">Delete Order</button>
             </td>
         </tr>
-    {% endfor %}
 </table>
 
 {% endblock %}

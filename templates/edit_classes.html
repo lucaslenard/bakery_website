@@ -1,0 +1,44 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>Admin Edit All Classes - Select query against classes table</h1>
+
+<table>
+    <tr>
+        <th>Class Name</th>
+        <th>Class Date</th>
+        <th>Instructor</th>
+        <th>Available Seats</th>
+        <th>Actions</th>
+    </tr>
+        <tr>
+            <td>Baking 101</td>
+            <td>1/12/21</td>
+            <td>Teacher Example</td>
+            <td>19</td>
+            <td>
+                <button value="edit_class" name="key">Edit Class</button>
+                <button value="delete_class" name="key">Delete Class</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" name="class_name" value>
+            </td>
+            <td>
+                <input type="date" name="date" value>
+            </td>
+            <td>
+                <input type="text" name="instructor_name" value>
+            </td>
+            <td>
+                <input type="number" name="available_seats" value>
+            </td>
+            <td>
+                <button value="add_class" name="add_class">Add Class</button>
+            </td>
+        </tr>
+</table>
+
+{% endblock %}
