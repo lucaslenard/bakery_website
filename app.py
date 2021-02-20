@@ -16,19 +16,17 @@ def load_products():
     # Load up all products form database
     query = "SELECT * FROM items;"
     results = execute_query(db_connection, query)
-    items = results.fetchall()
-    print(items)
+    data = results.fetchall()
 
+    # data = {
+    #     "donuts": "Donuts",
+    #     "bread": "Bread",
+    #     "hamburger_buns": "Hamburger Buns",
+    #     "kringle": "Racine Kringle",
+    #     "hot_dog_buns": "Hot Dog Buns"
+    # }
 
-    items = {
-        "donuts": "Donuts",
-        "bread": "Bread",
-        "hamburger_buns": "Hamburger Buns",
-        "kringle": "Racine Kringle",
-        "hot_dog_buns": "Hot Dog Buns"
-    }
-
-    return render_template('products.html', data=items)
+    return render_template('products.html', data=data)
 
 
 @app.route('/classes')

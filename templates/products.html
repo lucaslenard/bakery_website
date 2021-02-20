@@ -17,12 +17,12 @@
         <th>Quantity To Order</th>
         <th>Action(s)</th>
     </tr>
-    {% for key, value in data.items() %}
+    {% for item in data %}
         <tr>
-            <td>{{ value }}</td>
-            <td>Acme Inc</td>
-            <td>$1.54</td>
-            <td>100</td>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+            <td>{{item[3]}}</td>
             <td><input type="text" size="8" placeholder="1" name="Quantity"/></td>
             <td><button value="{{ key }}" name="key">Add to Cart</button></td>
         </tr>
