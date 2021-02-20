@@ -98,14 +98,13 @@ def payment_info():
 
 @app.route('/address_information')
 def address_info():
-    address_info = {
-        "recipient_name": "Lucas Test",
-        "street_address": "100 Test Ave.",
-        "city": "Testing Village",
-        "state": "Test Virginia",
-        "zip": "00011"
-    }
-    return render_template('address_info.html', data=address_info)
+    query = f"SELECT * FROM addresses WHERE user_id=(SELECT id from users WHERE username='{username}');"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["street_address", "secondary_street_address", "city", "state", "zip_code"])
+
+    return render_template('address_info.html', data=data)
 
 
 @app.route('/edit_accounts')

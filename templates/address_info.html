@@ -7,7 +7,6 @@
 
 <table>
     <tr>
-        <th>Full Name</th>
         <th>Primary Street Address</th>
         <th>Secondary Street Address</th>
         <th>City</th>
@@ -16,19 +15,16 @@
         <th>Actions</th>
     </tr>
     {% for key, value in data.items() %}
-        <tr>
-            <td>Test User</td>
-            <td>100 Test Ave.</td>
-            <td>Apt. 2020</td>
-            <td>Testopia</td>
-            <td>Test Virginia</td>
-            <td>00001</td>
-            <td>
-                <button value="{{ key }}" name="key">Select Address</button>
-                <button value="{{ key }}" name="key">Edit Address</button>
-                <button value="{{ key }}" name="key">Remove Address</button>
-            </td>
-        </tr>
+    <tr>
+        {% for key, value in value.items() %}
+            <td id="{{ key }}">{{value}}</td>
+        {% endfor %}
+        <td>
+            <button value="{{ key }}" name="select_address">Select Address</button>
+            <button value="{{ key }}" name="edit_address">Edit Address</button>
+            <button value="{{ key }}" name="remove_address">Remove Address</button>
+        </td>
+    </tr>
     {% endfor %}
         <tr>
             <td>
