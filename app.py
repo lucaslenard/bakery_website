@@ -77,6 +77,7 @@ def orders():
     results = execute_query(db_connection, query)
     response = results.fetchall()
 
+    # TODO: Fix the format_data to replace boolean with checkbox somehow?
     data = format_data(response, ["id", "date", "total_cost", "fulfilled"])
     # TODO: Add in links to orders and utilize redirect with the order_id
 
@@ -85,14 +86,14 @@ def orders():
 
 @app.route('/payment_information')
 def payment_info():
+    query = f"SELECT * FROM payment_information WHERE user_id=(SELECT id from users WHERE username='{username}');"
 
-    card_info = {
-        "card_holder_name": "Lucas Test",
-        "card_number": "123454321",
-        "security_number": "270",
-        "expiration_date": "2022-01-01"
-    }
-    return render_template('payment_info.html', data=card_info)
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["name", "card_number", "security_number", "expiration_date"])
+
+    return render_template('payment_info.html', data=data)
 
 
 @app.route('/address_information')

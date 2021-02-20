@@ -15,17 +15,16 @@
         <th>Actions</th>
     </tr>
     {% for key, value in data.items() %}
-        <tr>
-            <td>Test User</td>
-            <td>12341234</td>
-            <td>111</td>
-            <td>2021-02-01</td>
-            <td>
-                <button value="{{ key }}" name="key">Select Payment</button>
-                <button value="{{ key }}" name="key">Edit Payment</button>
-                <button value="{{ key }}" name="key">Remove Payment</button>
-            </td>
-        </tr>
+    <tr>
+        {% for key, value in value.items() %}
+            <td id="{{ key }}">{{value}}</td>
+        {% endfor %}
+        <td>
+            <button value="{{ key }}" name="select_payment">Select Payment</button>
+            <button value="{{ key }}" name="edit_payment">Edit Payment</button>
+            <button value="{{ key }}" name="remove_payment">Remove Payment</button>
+        </td>
+    </tr>
     {% endfor %}
         <tr>
             <td>
