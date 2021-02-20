@@ -15,15 +15,14 @@
         <th>Course Result</th>
         <th>Actions</th>
     </tr>
-        <tr>
-            <td>Baking 101</td>
-            <td>1/12/21</td>
-            <td>Teacher Example</td>
-            <td>Pending</td>
-            <td>
-                <button value="delete_enrollment" name="key">Drop Class</button>
-            </td>
-        </tr>
+    {% for key, value in data.items() %}
+    <tr>
+        {% for key, value in value.items() %}
+            <td id="{{ key }}">{{value}}</td>
+        {% endfor %}
+        <td><button value="{{ key }}" name="drop_class">Drop Class</button></td>
+    </tr>
+    {% endfor %}
 </table>
 
 {% endblock %}

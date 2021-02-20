@@ -13,15 +13,13 @@ def index():
 
 @app.route('/all_products')
 def load_products():
-    # Load up all products form database
-    # query = "SELECT * FROM items;"
 
     query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
             "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id;"
     results = execute_query(db_connection, query)
     response = results.fetchall()
 
-    # TODO: Set vendor name to in house if NULL
+    # TODO: Set vendor name to "Homemade" if NULL
     data = format_data(response, ["product_name", "vendor_name", "price", "stock_quantity"])
 
     return render_template('products.html', data=data)
@@ -45,11 +43,18 @@ def user_login_register():
 
 @app.route('/class_enrollments')
 def enrolled_classes():
-    items = {
-        "bakery_101": "Beginner Baking 101",
-        "bakery_301": "Advanced Baking 301"
-    }
-    return render_template('enrolled_classes.html', data=items)
+
+    # TODO: Update to use the user_id from session
+    user_id = 3
+    query = f"SELECT enrollments.id, enrollments.course_result, classes.class_name, classes.date, classes.instructor " \
+            f"FROM enrollments INNER JOIN classes ON enrollments.class_id=classes.id " \
+            f"WHERE enrollments.user_id=(SELECT id from users WHERE username={user_id});"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["class_name", "date", "instructor", "course_result"])
+
+    return render_template('enrolled_classes.html', data=data)
 
 
 @app.route('/shopping_cart')

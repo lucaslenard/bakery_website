@@ -14,16 +14,6 @@ def connect_to_database():
 
 
 def execute_query(connection=None, query=None):
-    '''
-    executes a given SQL query on the given db connection and returns a Cursor object
-
-    db_connection: a MySQLdb connection object created by connect_to_database()
-    query: string containing SQL query
-
-    returns: A Cursor object as specified at https://www.python.org/dev/peps/pep-0249/#cursor-objects.
-    You need to run .fetchall() or .fetchone() on that object to actually acccess the results.
-
-    '''
 
     if connection is None:
         print("No connection to the database found! Have you called connect_to_database() first?")
