@@ -1,12 +1,11 @@
 from flask import Flask, render_template
-from flask import request, redirect
-# from db_connector.db_connector import connect_to_database, execute_query
+from database.connector import connect_to_database, execute_query
 
 
 app = Flask(__name__)
+db_connection = connect_to_database()
 
 
-# Render homepage/index
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -14,7 +13,12 @@ def index():
 
 @app.route('/all_products')
 def load_products():
-    #Load up all products form database
+    # Load up all products form database
+    query = "SELECT * FROM items;"
+    cursor = execute_query(db_connection, query)
+    items = cursor.fetchall()
+    print(items)
+
 
     items = {
         "donuts": "Donuts",
@@ -119,16 +123,3 @@ def admin_edit_orders():
 @app.route('/edit_enrollments')
 def admin_edit_enrollments():
     return render_template('edit_enrollments.html')
-
-    # db_connection = connect_to_database()
-    # drop_table = "DROP TABLE IF EXISTS diagnostic;"
-    # create_table = "CREATE TABLE diagnostic(id INT PRIMARY KEY AUTO_INCREMENT, text VARCHAR(255) NOT NULL);"
-    # insert_row = "INSERT INTO diagnostic (text) VALUES ('MySQL is Working!');"
-    # query = "SELECT * FROM diagnostic;"
-    # execute_query(db_connection, drop_table);
-    # execute_query(db_connection, create_table);
-    # execute_query(db_connection, insert_row);
-    # values = execute_query(db_connection, query).fetchall();
-    #
-    # return render_template('home.html', results=values)
-
