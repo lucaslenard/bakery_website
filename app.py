@@ -146,7 +146,15 @@ def admin_edit_classes():
 
 @app.route('/edit_orders')
 def admin_edit_orders():
-    return render_template('edit_orders.html')
+    query = "SELECT orders.id, orders.date, orders.fulfilled, orders.total_cost, users.first_name, users.last_name " \
+            "FROM orders INNER JOIN users ON orders.user_id=users.id;"
+
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["id", "first_name", "last_name", "date", "total_cost", "fulfilled"])
+
+    return render_template('edit_orders.html', data=data)
 
 
 @app.route('/edit_enrollments')
