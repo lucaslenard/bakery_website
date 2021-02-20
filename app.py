@@ -134,7 +134,14 @@ def admin_edit_products():
 
 @app.route('/edit_classes')
 def admin_edit_classes():
-    return render_template('edit_classes.html')
+
+    query = "SELECT id, class_name, date, instructor, available_seats, price FROM classes;"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["class_name", "date", "instructor", "available_seats", "price"])
+
+    return render_template('edit_classes.html', data=data)
 
 
 @app.route('/edit_orders')

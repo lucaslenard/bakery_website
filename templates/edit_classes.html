@@ -10,18 +10,20 @@
         <th>Class Date</th>
         <th>Instructor</th>
         <th>Available Seats</th>
+        <th>Price</th>
         <th>Actions</th>
     </tr>
-        <tr>
-            <td>Baking 101</td>
-            <td>1/12/21</td>
-            <td>Teacher Example</td>
-            <td>19</td>
-            <td>
-                <button value="edit_class" name="key">Edit Class</button>
-                <button value="delete_class" name="key">Delete Class</button>
-            </td>
-        </tr>
+    {% for key, value in data.items() %}
+    <tr>
+        {% for key, value in value.items() %}
+            <td id="{{ key }}">{{value}}</td>
+        {% endfor %}
+        <td>
+            <button value="{{key}}" name="edit_class">Edit Class</button>
+            <button value="{{key}}" name="delete_class">Delete Class</button>
+        </td>
+    </tr>
+    {% endfor %}
         <tr>
             <td>
                 <input type="text" name="class_name" value>
