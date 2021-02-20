@@ -17,7 +17,7 @@
         <th>Quantity To Order</th>
         <th>Action(s)</th>
     </tr>
-    {% for key, value in data %}
+    {% for key, value in data.items() %}
     <tr>
         {% for key, value in value.items() %}
             <td>Key: {{key}} Value: {{value}}</td>
