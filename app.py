@@ -45,10 +45,10 @@ def user_login_register():
 def enrolled_classes():
 
     # TODO: Update to use the user_id from session
-    user_id = 3
+    username = "admin"
     query = f"SELECT enrollments.id, enrollments.course_result, classes.class_name, classes.date, classes.instructor " \
             f"FROM enrollments INNER JOIN classes ON enrollments.class_id=classes.id " \
-            f"WHERE enrollments.user_id=(SELECT id from users WHERE username={user_id});"
+            f"WHERE enrollments.user_id=(SELECT id from users WHERE username={username});"
     results = execute_query(db_connection, query)
     response = results.fetchall()
 
