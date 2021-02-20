@@ -72,7 +72,7 @@ def cart():
 @app.route('/previous_orders')
 def orders():
 
-    query = f"SELECT * FROM orders WHERE user_id(SELECT id from users WHERE username='{username}');"
+    query = f"SELECT * FROM orders WHERE user_id=(SELECT id from users WHERE username='{username}');"
 
     results = execute_query(db_connection, query)
     response = results.fetchall()
