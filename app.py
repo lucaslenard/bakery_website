@@ -15,8 +15,8 @@ def index():
 def load_products():
     # Load up all products form database
     query = "SELECT * FROM items;"
-    cursor = execute_query(db_connection, query)
-    items = cursor.fetchall()
+    results = execute_query(db_connection, query)
+    items = results.fetchall()
     print(items)
 
 
