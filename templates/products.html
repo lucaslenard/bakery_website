@@ -17,17 +17,16 @@
         <th>Quantity To Order</th>
         <th>Action(s)</th>
     </tr>
-    {% for key, value in data.items() %}
-        {% for item in value %}
-            <tr>
-                <td>{{item[0]}}</td>
-                <td>{{item[1]}}</td>
-                <td>{{item[2]}}</td>
-                <td>{{item[3]}}</td>
-                <td><input type="text" size="8" placeholder="1" name="Quantity"/></td>
+    {% for item in value %}
+        <tr>
+        {% for key, value in data.items() %}
+            <td>Key: {{key}} Value: {{value}}</td>
+        {% endfor %}
+
+            <td><input type="text" size="8" placeholder="1" name="Quantity"/></td>
                 <td><button value="{{ key }}" name="key">Add to Cart</button></td>
             </tr>
-        {% endfor %}
+        
     {% endfor %}
 
 </table>
