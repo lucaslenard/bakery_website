@@ -17,6 +17,7 @@ def load_products():
     query = "SELECT * FROM items;"
     results = execute_query(db_connection, query)
     data = results.fetchall()
+    print(data)
 
     # data = {
     #     "donuts": "Donuts",
