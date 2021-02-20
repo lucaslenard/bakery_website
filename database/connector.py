@@ -9,10 +9,11 @@ def connect_to_database():
     db = 'cs340_lenardl'
 
     connection = pymysql.connect(hostname, username, password, db)
+    # connection = pymysql.connect('localhost', 'root', 'jamf1234', 'quiz3')
     return connection
 
 
-def execute_query(db_connection=None, query=None, query_params=()):
+def execute_query(connection=None, query=None):
     '''
     executes a given SQL query on the given db connection and returns a Cursor object
 
@@ -24,7 +25,7 @@ def execute_query(db_connection=None, query=None, query_params=()):
 
     '''
 
-    if db_connection is None:
+    if connection is None:
         print("No connection to the database found! Have you called connect_to_database() first?")
         return None
 
@@ -32,20 +33,15 @@ def execute_query(db_connection=None, query=None, query_params=()):
         print("query is empty! Please pass a SQL query in query")
         return None
 
-    print("Executing %s with %s" % (query, query_params))
-    # Create a cursor to execute query. Why?
-    # Because apparently they optimize execution by retaining a reference according to PEP0249
-    cursor = db_connection.cursor(pymysql.cursors.DictCursor)
+    # Using tutorialspoint as a guide: https://www.tutorialspoint.com/python3/python_database_access.htm
+    print(f"Executing %query: {query}")
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
 
-    '''
-    params = tuple()
-    #create a tuple of paramters to send with the query
-    for q in query_params:
-        params = params + (q)
-    '''
-    #TODO: Sanitize the query before executing it!!!
-    cursor.execute(query, query_params)
-    # this will actually commit any changes to the database. without this no
-    # changes will be committed!
-    db_connection.commit()
-    return cursor
+    # TODO: Sanitize the query before executing it
+    cursor.execute(query)
+
+    # Used when doing an insert - might need to split up if it causes issues with reads
+    connection.commit()
+
+    results = cursor.fetchall()
+    return results
