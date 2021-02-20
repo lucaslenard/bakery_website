@@ -16,16 +16,18 @@ def load_products():
     # Load up all products form database
     query = "SELECT * FROM items;"
     results = execute_query(db_connection, query)
-    data = results.fetchall()
-    print(data)
+    response = results.fetchall()
 
-    # data = {
-    #     "donuts": "Donuts",
-    #     "bread": "Bread",
-    #     "hamburger_buns": "Hamburger Buns",
-    #     "kringle": "Racine Kringle",
-    #     "hot_dog_buns": "Hot Dog Buns"
-    # }
+    # Rebuild the return as a dict of dicts with display order for rendor
+    data = {}
+    for item in response:
+        id = item["id"]
+        data.update({id: {"product_name": item["product_name"],
+                          "vendor_id": item["vendor_id"],
+                          "price": item["price"],
+                          "stock_quantity": item["stock_quantity"]}})
+
+    print(data)
 
     return render_template('products.html', data=data)
 
