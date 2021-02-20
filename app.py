@@ -21,11 +21,10 @@ def load_products():
     # Rebuild the return as a dict of dicts with display order for rendor
     data = {}
     for item in response:
-        id = item["id"]
-        data.update({id: {"product_name": item["product_name"],
-                          "vendor_id": item["vendor_id"],
-                          "price": item["price"],
-                          "stock_quantity": item["stock_quantity"]}})
+        data.update({str(item["id"]): {"product_name": item["product_name"],
+                                       "vendor_id": item["vendor_id"],
+                                       "price": item["price"],
+                                       "stock_quantity": str(item["stock_quantity"])}})
 
     print(data)
 
