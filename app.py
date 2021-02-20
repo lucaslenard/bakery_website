@@ -5,6 +5,9 @@ from database.data_handler import format_data
 app = Flask(__name__)
 db_connection = connect_to_database()
 
+# TODO: Update to use the user_id from session
+username = "admin"
+
 
 @app.route('/')
 def index():
@@ -44,8 +47,6 @@ def user_login_register():
 @app.route('/class_enrollments')
 def enrolled_classes():
 
-    # TODO: Update to use the user_id from session
-    username = "admin"
     query = f"SELECT enrollments.id, enrollments.course_result, classes.class_name, classes.date, classes.instructor " \
             f"FROM enrollments INNER JOIN classes ON enrollments.class_id=classes.id " \
             f"WHERE enrollments.user_id=(SELECT id from users WHERE username='{username}');"
@@ -59,6 +60,7 @@ def enrolled_classes():
 
 @app.route('/shopping_cart')
 def cart():
+    # TODO: Need to update to utilize session to pull ids
     items = {
         "donuts": "Donuts",
         "bread": "Bread",
@@ -69,12 +71,16 @@ def cart():
 
 @app.route('/previous_orders')
 def orders():
-    # Add in links to orders and utilize redirect with the order_id
-    orders = {
-        "00001": "Order 00001 on 1/12/21 for 3 items",
-        "00002": "Order 00002 on 1/14/21 for 2 items"
-    }
-    return render_template('order_history.html', data=orders)
+
+    query = f"SELECT * FROM orders WHERE user_id(SELECT id from users WHERE username='{username}');"
+
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["id", "date", "total_cost", "fulfilled"])
+    # TODO: Add in links to orders and utilize redirect with the order_id
+
+    return render_template('order_history.html', data=data)
 
 
 @app.route('/payment_information')
