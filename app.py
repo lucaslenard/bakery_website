@@ -114,7 +114,7 @@ def admin_edit_accounts():
     results = execute_query(db_connection, query)
     response = results.fetchall()
 
-    data = format_data(response, ["first_name", "last_name", "username", "password", "email", "admin"])
+    data = format_data(response, ["first_name", "last_name", "username", "password", "email_address", "admin"])
 
     return render_template('edit_accounts.html', data=data)
 
