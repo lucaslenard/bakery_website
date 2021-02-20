@@ -15,16 +15,20 @@
         <th>Quantity Available</th>
         <th>Action(s)</th>
     </tr>
-        <tr>
-            <td>Sample Item Name</td>
-            <td>Acme Inc</td>
-            <td>$1.54</td>
-            <td>100</td>
-            <td>
-                <button value="edit_item" name="edit_item">Edit Item</button>
-                <button value="remove_item" name="remove_item">Remove Item</button>
-            </td>
-        </tr>
+
+    {% for key, value in data.items() %}
+    <tr>
+        {% for key, value in value.items() %}
+            <td id="{{ key }}">{{value}}</td>
+        {% endfor %}
+
+        <td>
+            <button value="edit_item" name="edit_item">Edit Item</button>
+            <button value="remove_item" name="remove_item">Remove Item</button>
+        </td>
+    </tr>
+    {% endfor %}
+
         <tr>
             <td>
                 <input type="text" name="item_name" value>

@@ -121,7 +121,15 @@ def admin_edit_accounts():
 
 @app.route('/edit_products')
 def admin_edit_products():
-    return render_template('edit_products.html')
+    query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
+            "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id;"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    # TODO: Set vendor name to "Homemade" if NULL
+    data = format_data(response, ["product_name", "vendor_name", "price", "stock_quantity"])
+
+    return render_template('edit_products.html', data=data)
 
 
 @app.route('/edit_classes')
