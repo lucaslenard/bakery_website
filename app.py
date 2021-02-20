@@ -109,7 +109,14 @@ def address_info():
 
 @app.route('/edit_accounts')
 def admin_edit_accounts():
-    return render_template('edit_accounts.html')
+    query = "SELECT * FROM users;"
+
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["first_name", "last_name", "username", "password", "email", "admin"])
+
+    return render_template('edit_accounts.html', data=data)
 
 
 @app.route('/edit_products')
