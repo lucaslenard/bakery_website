@@ -20,7 +20,7 @@
     {% for key, value in data.items() %}
     <tr>
         {% for key, value in value.items() %}
-            <td>Key: {{key}} Value: {{value}}</td>
+            <td id="{{ key }}">{{value}}</td>
         {% endfor %}
 
         <td><input type="text" size="8" placeholder="1" name="input_quantity"/></td>
