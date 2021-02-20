@@ -1,4 +1,4 @@
-import mysqldb
+import mysqlclient
 
 
 def connect_to_database():
@@ -7,7 +7,7 @@ def connect_to_database():
     username = 'cs340_lenardl'
     password = '9020'
     db = 'cs340_lenardl'
-    connection = MySQLdb.connect(hostname, username, password, db)
+    connection = mysqlclient.connect(hostname, username, password, db)
     return connection
 
 
@@ -34,7 +34,7 @@ def execute_query(db_connection=None, query=None, query_params=()):
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why?
     # Because apparently they optimize execution by retaining a reference according to PEP0249
-    cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor = db_connection.cursor(mysqlclient.cursors.DictCursor)
 
     '''
     params = tuple()
