@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from database.connector import connect_to_database, execute_query
-
+from database.data_handler import format_data
 
 app = Flask(__name__)
 db_connection = connect_to_database()
@@ -14,32 +14,28 @@ def index():
 @app.route('/all_products')
 def load_products():
     # Load up all products form database
-    query = "SELECT * FROM items;"
+    # query = "SELECT * FROM items;"
+
+    query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
+            "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id;"
     results = execute_query(db_connection, query)
     response = results.fetchall()
 
-    # Rebuild the return as a dict of dicts with display order for rendor
-    data = {}
-    for item in response:
-        data.update({str(item["id"]): {"product_name": item["product_name"],
-                                       "vendor_id": item["vendor_id"],
-                                       "price": item["price"],
-                                       "stock_quantity": str(item["stock_quantity"])}})
-
-    print(data)
+    # TODO: Set vendor name to in house if NULL
+    data = format_data(response, ["product_name", "vendor_name", "price", "stock_quantity"])
 
     return render_template('products.html', data=data)
 
 
 @app.route('/classes')
 def load_classes():
-    items = {
-        "bakery_101": "Beginner Baking 101",
-        "bakery_102": "Beginner Baking 102",
-        "bakery_201": "Intermediate Baking 201",
-        "bakery_301": "Advanced Baking 301"
-    }
-    return render_template('classes.html', data=items)
+    query = "SELECT id, class_name, date, instructor, available_seats, price FROM classes;"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["class_name", "date", "instructor", "available_seats", "price"])
+
+    return render_template('classes.html', data=data)
 
 
 @app.route('/login_register')
