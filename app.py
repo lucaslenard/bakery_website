@@ -180,7 +180,9 @@ def add_new_product():
     print(quantity)
 
     if vendor is None:
-        vendor_id = None
+        query = f"INSERT INTO items (vendor_id, product_name, price, stock_quantity) " \
+                f"VALUES ('NULL', '{item_name}', {int(cost)}, {int(quantity)});"
+
     else:
         query = f"SELECT id from vendors where vendor_name='{vendor}';"
         results = execute_query(db_connection, query)
@@ -195,8 +197,8 @@ def add_new_product():
             vendor_id = results.fetchall()[0]["id"]
             print(vendor_id)
 
-    query = f"INSERT INTO items (vendor_id, product_name, price, stock_quantity) " \
-            f"VALUES ({int(vendor_id)}, '{item_name}', {int(cost)}, {int(quantity)});"
+        query = f"INSERT INTO items (vendor_id, product_name, price, stock_quantity) " \
+                f"VALUES ({int(vendor_id)}, '{item_name}', {int(cost)}, {int(quantity)});"
 
     execute_query(db_connection, query)
 
