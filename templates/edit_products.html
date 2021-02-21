@@ -7,46 +7,44 @@
 <input type="text" placeholder="Filter">
 <button value="filter_products" name="filter">Filter Results</button>
 <p>
-<table>
-    <tr>
-        <th>Item Name</th>
-        <th>Vendor</th>
-        <th>Cost</th>
-        <th>Quantity Available</th>
-        <th>Action(s)</th>
-    </tr>
-
-    {% for key, value in data.items() %}
-    <tr>
-        {% for key, value in value.items() %}
+<form action="/add_product" method="POST">
+    <table>
+        <tr>
+            <th>Item Name</th>
+            <th>Vendor</th>
+            <th>Cost</th>
+            <th>Quantity Available</th>
+            <th>Action(s)</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            {% for key, value in value.items() %}
             <td id="{{ key }}">{{value}}</td>
+            {% endfor %}
+            <td>
+                <button value="edit_item" name="edit_item">Edit Item</button>
+                <button value="remove_item" name="remove_item">Remove Item</button>
+            </td>
+        </tr>
         {% endfor %}
-
-        <td>
-            <button value="edit_item" name="edit_item">Edit Item</button>
-            <button value="remove_item" name="remove_item">Remove Item</button>
-        </td>
-    </tr>
-    {% endfor %}
-
         <tr>
             <td>
                 <input type="text" name="item_name" value>
             </td>
             <td>
-                <input type="text" name="vendor_name" value>
+                <input type="text" name="vendor" value>
             </td>
             <td>
                 <input type="number" name="price" value>
             </td>
             <td>
-                <input type="number" name="initial_quantity" value>
+                <input type="number" name="quantity" value>
             </td>
             <td>
-                <button value="add_item" name="add_item">Add Item</button>
+                <button type="submit" name="add_item">Add Item</button>
             </td>
         </tr>
-
-</table>
+    </table>
+</form>
 
 {% endblock %}

@@ -132,7 +132,6 @@ def admin_edit_accounts():
 
 @app.route('/add_account', methods=["POST"])
 def add_user_account():
-    print("In the function")
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
     user_name = request.form.get("username")
@@ -145,13 +144,6 @@ def add_user_account():
     else:
         admin = False
 
-    print(first_name)
-    print(last_name)
-    print(user_name)
-    print(password)
-    print(email)
-    print(admin)
-
     # TODO: Check that username isn't already in use
 
     query = f"INSERT INTO users (first_name, last_name, username, password, email_address, admin) " \
@@ -160,6 +152,7 @@ def add_user_account():
     execute_query(db_connection, query)
 
     return redirect(request.referrer)
+
 
 @app.route('/edit_products')
 def admin_edit_products():
@@ -172,6 +165,38 @@ def admin_edit_products():
     data = format_data(response, ["product_name", "vendor_name", "price", "stock_quantity"])
 
     return render_template('edit_products.html', data=data)
+
+
+@app.route('/add_product', methods=["POST"])
+def add_new_product():
+    print("In the function")
+    item_name = request.form.get("item_name")
+    vendor = request.form.get("vendor")
+    cost = request.form.get("cost")
+    quantity = request.form.get("quantity")
+
+    if vendor == "":
+        vendor_id = None
+    else:
+        query = f"SELECT id from vendors where vendor_name='{vendor}';"
+        results = execute_query(db_connection, query)
+        vendor_id = results.fetchall()
+        print(vendor_id)
+
+        if not vendor_id:
+            query = f"INSERT INTO vendors (vendor_name) VALUES ('{vendor}');"
+            execute_query(db_connection, query)
+            query = f"SELECT id from vendors where vendor_name='{vendor}';"
+            results = execute_query(db_connection, query)
+            vendor_id = results.fetchall()
+            
+    query = f"INSERT INTO items (vendor_id, product_name, price, stock_quantity) " \
+            f"VALUES ({int(vendor_id)}, '{item_name}', {int(cost)}, {int(quantity)});"
+
+    execute_query(db_connection, query)
+
+    return redirect(request.referrer)
+
 
 
 @app.route('/edit_classes')
