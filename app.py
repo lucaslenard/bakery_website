@@ -180,8 +180,8 @@ def add_new_product():
     print(quantity)
 
     if vendor is None:
-        query = f"INSERT INTO items (vendor_id, product_name, price, stock_quantity) " \
-                f"VALUES ({None}, '{item_name}', {int(cost)}, {int(quantity)});"
+        query = f"INSERT INTO items (product_name, price, stock_quantity) " \
+                f"VALUES ('{item_name}', {int(cost)}, {int(quantity)});"
 
     else:
         query = f"SELECT id from vendors where vendor_name='{vendor}';"
