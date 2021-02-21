@@ -27,11 +27,12 @@
         </td>
     </tr>
     {% endfor %}
+    <form action="/add_account" method="POST">
         <tr>
             <td>
                 <input type="text" name="first_name" value>
             </td>
-            <td>
+                    <td>
                 <input type="text" name="last_name" value>
             </td>
             <td>
@@ -47,9 +48,10 @@
                 <input type="checkbox" name="admin" value>
             </td>
             <td>
-                <button value="add_user" name="add_user">Add User</button>
+                <button type="submit" name="add_user">Add User</button>
             </td>
         </tr>
+    </form>
 </table>
 
 {% endblock %}

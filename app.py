@@ -130,6 +130,31 @@ def admin_edit_accounts():
     return render_template('edit_accounts.html', data=data)
 
 
+@app.route('/add_account', methods=["POST"])
+def add_user_account():
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    user_name = request.form["username"]
+    password = request.form["password"]
+    email = request.form["email"]
+    admin = request.form["admin"]
+
+    print(first_name)
+    print(last_name)
+    print(user_name)
+    print(password)
+    print(email)
+    print(admin)
+
+    # TODO: Check that username isn't already in use
+
+    query = f"INSERT INTO users (first_name, last_name, username, password, email_address, admin) " \
+            f"VALUES ({first_name}, {last_name}, {user_name}, {password}, {email}, {admin});"
+
+    execute_query(db_connection, query)
+
+    return redirect(request.referrer)
+
 @app.route('/edit_products')
 def admin_edit_products():
     query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
