@@ -161,9 +161,9 @@ def admin_edit_orders():
 def admin_edit_enrollments():
 
     query = f"SELECT enrollments.id, enrollments.course_result, classes.class_name, classes.date, classes.instructor, " \
-            f"users.first_name, users.last_name " \
-            f"FROM enrollments INNER JOIN classes ON enrollments.class_id=classes.id " \
-            f"FROM users INNER JOIN users ON enrollments.user_id=users.id;"
+            f"users.first_name, users.last_name FROM enrollments " \
+            f"INNER JOIN classes ON enrollments.class_id=classes.id " \
+            f"INNER JOIN users ON enrollments.user_id=users.id;"
 
     results = execute_query(db_connection, query)
     response = results.fetchall()
