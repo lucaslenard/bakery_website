@@ -150,7 +150,7 @@ def add_user_account():
     # TODO: Check that username isn't already in use
 
     query = f"INSERT INTO users (first_name, last_name, username, password, email_address, admin) " \
-            f"VALUES ({first_name}, {last_name}, {user_name}, {password}, {email}, {admin});"
+            f"VALUES ('{first_name}', '{last_name}', '{user_name}', '{password}', '{email}', {admin});"
 
     execute_query(db_connection, query)
 
