@@ -41,12 +41,10 @@ def load_classes():
 
 @app.route('/enroll_in_class', methods=["POST"])
 def enroll_class():
-    print("IN FUNCTION")
     class_id = request.form["enroll"]
-    print(class_id)
     query = f"INSERT INTO enrollments (user_id, class_id, course_result) " \
             f"VALUES ((SELECT id from users WHERE username='{username}'), {int(class_id)}, 'Not Taken');"
-    print(query)
+    
     execute_query(db_connection, query)
 
     return redirect(request.referrer)
