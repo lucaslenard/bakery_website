@@ -138,7 +138,12 @@ def add_user_account():
     user_name = request.form.get("username")
     password = request.form.get("password")
     email = request.form.get("email")
-    admin = request.form.get("admin")
+    checkbox = request.form.get("admin")
+
+    if checkbox is not None:
+        admin = True
+    else:
+        admin = False
 
     print(first_name)
     print(last_name)
