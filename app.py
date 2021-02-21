@@ -133,12 +133,12 @@ def admin_edit_accounts():
 @app.route('/add_account', methods=["POST"])
 def add_user_account():
     print("In the function")
-    first_name = request.form.get["first_name"]
-    last_name = request.form.get["last_name"]
-    user_name = request.form.get["username"]
-    password = request.form.get["password"]
-    email = request.form.get["email"]
-    admin = request.form.get["admin"]
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    user_name = request.form.get("username")
+    password = request.form.get("password")
+    email = request.form.get("email")
+    admin = request.form.get("admin")
 
     print(first_name)
     print(last_name)
