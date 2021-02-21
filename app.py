@@ -40,7 +40,7 @@ def load_classes():
 
 
 @app.route('/enroll_in_class', methods=['POST'])
-def enroll_in_class():
+def enroll_class():
     class_id = request.form["class_id"]
     print(class_id)
     query = f"INSERT INTO enrollments (user_id, class_id, course_result) " \
