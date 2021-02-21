@@ -44,7 +44,7 @@ def enroll_class():
     class_id = request.form["enroll"]
     query = f"INSERT INTO enrollments (user_id, class_id, course_result) " \
             f"VALUES ((SELECT id from users WHERE username='{username}'), {int(class_id)}, 'Not Taken');"
-    
+
     execute_query(db_connection, query)
 
     return redirect(request.referrer)
