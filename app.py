@@ -171,7 +171,7 @@ def admin_edit_products():
 def add_new_product():
     print("In the function")
     item_name = request.form.get("item_name")
-    vendor = request.form.get("vendor")
+    vendor = request.form.get("vendor") or None
     cost = request.form.get("price")
     quantity = request.form.get("quantity")
     print(item_name)
@@ -179,7 +179,7 @@ def add_new_product():
     print(cost)
     print(quantity)
 
-    if vendor == "":
+    if vendor is None:
         vendor_id = None
     else:
         query = f"SELECT id from vendors where vendor_name='{vendor}';"
