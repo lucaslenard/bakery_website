@@ -194,9 +194,10 @@ def add_new_product():
             execute_query(db_connection, query)
             query = f"SELECT id from vendors where vendor_name='{vendor}';"
             results = execute_query(db_connection, query)
-            vendor_id = results.fetchall()[0]["id"]
+            vendor_id = results.fetchall()
             print(vendor_id)
 
+        vendor_id = vendor_id[0]["id"]
         query = f"INSERT INTO items (vendor_id, product_name, price, stock_quantity) " \
                 f"VALUES ({int(vendor_id)}, '{item_name}', {int(cost)}, {int(quantity)});"
 
