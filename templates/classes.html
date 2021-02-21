@@ -5,27 +5,29 @@
     <h1>All Available Classes - Select query against Classes table</h1>
     <p>Clicking Enroll will add row to enrollments table</p>
 
-<input type="text" placeholder="Filter">
 <button value="filter_classes" name="filter">Filter Results</button>
 <p>
-<table>
-    <tr>
-        <th>Class Name</th>
-        <th>Date of Class</th>
-        <th>Instructor</th>
-        <th>Available Seats</th>
-        <th>Cost</th>
-        <th>Action(s)</th>
-    </tr>
-    {% for key, value in data.items() %}
-    <tr>
-        {% for key, value in value.items() %}
-            <td id="{{ key }}">{{value}}</td>
+<form action="/enroll_in_class" method="POST">
+    <table>
+        <tr>
+            <th>Class Name</th>
+            <th>Date of Class</th>
+            <th>Instructor</th>
+            <th>Available Seats</th>
+            <th>Cost</th>
+            <th>Action(s)</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            {% for key, value in value.items() %}
+                <td id="{{ key }}">{{value}}</td>
+            {% endfor %}
+            <td>
+                <input type="submit" value="{{ key }}">Enroll</input>
+            </td>
+        </tr>
         {% endfor %}
-        <td><button value="{{ key }}" name="key">Enroll</button></td>
-    </tr>
-    {% endfor %}
-
-</table>
+    </table>
+</form>
 
 {% endblock %}

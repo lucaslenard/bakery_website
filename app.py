@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, request
 from database.connector import connect_to_database, execute_query
 from database.data_handler import format_data
 
@@ -38,6 +38,15 @@ def load_classes():
 
     return render_template('classes.html', data=data)
 
+
+@app.route('/enroll_in_class', methods=['POST'])
+def enroll_in_class():
+    class_id = request.form["class_id"]
+    query = f"INSERT INTO enrollments (user_id, class_id, course_result) " \
+            f"VALUES ((SELECT id from users WHERE username='{username}'), {class_id}, 'Not Taken';"
+    execute_query(db_connection, query)
+
+    return redirect(request.referrer)
 
 @app.route('/login_register')
 def user_login_register():
