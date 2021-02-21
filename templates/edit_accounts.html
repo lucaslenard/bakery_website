@@ -3,36 +3,35 @@
 {% block content %}
 
     <h1>Admin Edit All Users - Select query against classes table</h1>
-
-<table>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Username</th>
-        <th>Password</th>
-        <th>Email</th>
-        <th>Admin</th>
-        <th>Actions</th>
-    </tr>
-    {% for key, value in data.items() %}
-    <tr>
-        {% for key, value in value.items() %}
+<form action="/add_account" method="POST">
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Actions</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            {% for key, value in value.items() %}
             <td id="{{ key }}">{{value}}</td>
-        {% endfor %}
-        <td>
+            {% endfor %}
+            <td>
             <td>
                 <button value="{{key}}" name="edit_user">Edit User</button>
                 <button value="{{key}}" name="delete_user">Delete User</button>
             </td>
-        </td>
-    </tr>
-    {% endfor %}
-    <form action="/add_account" method="POST">
+            </td>
+        </tr>
+        {% endfor %}
         <tr>
             <td>
                 <input type="text" name="first_name" value>
             </td>
-                    <td>
+            <td>
                 <input type="text" name="last_name" value>
             </td>
             <td>
@@ -51,7 +50,7 @@
                 <button type="submit" name="add_user">Add User</button>
             </td>
         </tr>
-    </form>
-</table>
+    </table>
+</form>
 
 {% endblock %}
