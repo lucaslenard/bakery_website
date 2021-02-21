@@ -132,6 +132,7 @@ def admin_edit_accounts():
 
 @app.route('/add_account', methods=["POST"])
 def add_user_account():
+    print("In the function")
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
     user_name = request.form["username"]
