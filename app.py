@@ -172,7 +172,7 @@ def add_new_product():
     print("In the function")
     item_name = request.form.get("item_name")
     vendor = request.form.get("vendor")
-    cost = request.form.get("cost")
+    cost = request.form.get("price")
     quantity = request.form.get("quantity")
     print(item_name)
     print(vendor)
