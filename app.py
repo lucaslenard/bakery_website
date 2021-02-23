@@ -107,6 +107,32 @@ def payment_info():
     return render_template('payment_info.html', data=data)
 
 
+@app.route('/edit_payment_information')
+def edit_payment_info():
+    query = "SELECT id, user_id, name, card_number, security_code, expiration_date FROM payment_information;"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["name", "card_number", "security_code", "expiration_date"])
+
+    return render_template('payment_info.html', data=data)
+
+
+@app.route('/add_payment_information', methods=["POST"])
+def add_payment_info():
+    name = request.form.get("customer_name")
+    card_number = request.form.get("card_number")
+    security_number = request.form.get("security_number")
+    expiration_date = request.form.get("expiration_date")
+
+    query = f"INSERT INTO payment_information (user_id, name, card_number, security_number, expiration_date) " \
+            f"VALUES ((SELECT id from users WHERE username='{username}'), '{name}', '{card_number}', '{security_number}', '{expiration_date}');"
+
+    execute_query(db_connection, query)
+
+    return redirect(request.referrer)
+
+
 @app.route('/address_information')
 def address_info():
     query = f"SELECT * FROM addresses WHERE user_id=(SELECT id from users WHERE username='{username}');"
@@ -116,6 +142,33 @@ def address_info():
     data = format_data(response, ["street_address", "secondary_street_address", "city", "state", "zip_code"])
 
     return render_template('address_info.html', data=data)
+
+
+@app.route('/edit_address_information')
+def edit_address_info():
+    query = "SELECT id, user_id, street_address, secondary_street_address, city, state, zip_code;"
+    results = execute_query(db_connection, query)
+    response = results.fetchall()
+
+    data = format_data(response, ["street_address", "secondary_street_address", "city", "state", "zip_code"])
+
+    return render_template('address_info.html', data=data)
+
+
+@app.route('/add_address_information', methods=["POST"])
+def add_address_info():
+    street_address = request.form.get("street_address")
+    secondary_street_address = request.form.get("secondary_street_address")
+    city = request.form.get("city")
+    state = request.form.get("state")
+    zip_code = request.form.get("zip_code")
+
+    query = f"INSERT INTO payment_information (user_id, street_address, secondary_street_address, city, state, zip_code) " \
+            f"VALUES ((SELECT id from users WHERE username='{username}'), '{street_address}', '{secondary_street_address}', '{city}', '{state}', '{zip_code}');"
+
+    execute_query(db_connection, query)
+
+    return redirect(request.referrer)
 
 
 @app.route('/edit_accounts')
