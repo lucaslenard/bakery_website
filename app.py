@@ -163,7 +163,7 @@ def add_address_info():
     state = request.form.get("state")
     zip_code = request.form.get("zip_code")
 
-    query = f"INSERT INTO payment_information (user_id, street_address, secondary_street_address, city, state, zip_code) " \
+    query = f"INSERT INTO addresses (user_id, street_address, secondary_street_address, city, state, zip_code) " \
             f"VALUES ((SELECT id from users WHERE username='{username}'), '{street_address}', '{secondary_street_address}', '{city}', '{state}', '{zip_code}');"
 
     execute_query(db_connection, query)
