@@ -25,7 +25,9 @@
             <button value="{{ key }}" name="remove_address">Remove Address</button>
         </td>
     </tr>
-    {% endfor %}
+</table>
+<form action="/add_address_information" method="POST">
+    <table>
         <tr>
             <td>
                 <input type="text" name="customer_name" value>
@@ -46,9 +48,10 @@
                 <input type="text" name="zip" value>
             </td>
             <td>
-                <button value="add_address" name="add_button">Add Address</button>
+                <button type=submit value="add_address" name="add_button">Add Address</button>
             </td>
         </tr>
-</table>
+    </table>
+</form>
 
 {% endblock %}

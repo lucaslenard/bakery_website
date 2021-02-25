@@ -26,6 +26,9 @@
         </td>
     </tr>
     {% endfor %}
+</table>
+<form action="/add_payment_information" method="POST">
+    <table>
         <tr>
             <td>
                 <input type="text" name="customer_name" value>
@@ -40,9 +43,10 @@
                 <input type="date" name="expiration_date" value>
             </td>
             <td>
-                <button value="add_payment" name="add_button">Add Payment</button>
+                <button type=submit value="add_payment" name="add_button">Add Payment</button>
             </td>
         </tr>
-</table>
+    </table>
+</form>
 
 {% endblock %}
