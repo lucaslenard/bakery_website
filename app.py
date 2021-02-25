@@ -157,8 +157,8 @@ def edit_address_info():
 
 @app.route('/add_address_information', methods=["POST"])
 def add_address_info():
-    street_address = request.form.get("street_address")
-    secondary_street_address = request.form.get("secondary_street_address")
+    street_address = request.form.get("street_address_1")
+    secondary_street_address = request.form.get("street_address_2")
     city = request.form.get("city")
     state = request.form.get("state")
     zip_code = request.form.get("zip_code")
