@@ -9,7 +9,6 @@ def connect_to_database():
     db = 'cs340_lenardl'
 
     connection = pymysql.connect(host=hostname, user=username, password=password, database=db)
-    # connection = pymysql.connect('localhost', 'root', 'jamf1234', 'quiz3')
     return connection
 
 
@@ -32,5 +31,7 @@ def execute_query(connection=None, query=None):
 
     # Used when doing an insert - might need to split up if it causes issues with reads
     connection.commit()
+
+    cursor.close()
 
     return cursor
