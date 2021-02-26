@@ -26,14 +26,18 @@ def user_register():
     return render_template('register.html')
 
 
+@app.route('/logout')
+def user_logout():
+    session["username"] = ""
+    session.permanent = False
+    session['logged_in'] = False
+    return render_template('index.html')
+
+
 @app.route('/login_user', methods=['POST'])
 def login():
     username = request.form.get("username")
     password = request.form.get("password")
-    print(request.form)
-
-    print(username)
-    print(password)
 
     # Determine if the user exists
     query = f"SELECT username, password FROM users where username='{username}';"
@@ -52,6 +56,35 @@ def login():
     # Add in an error message that username or password was incorrect
 
     return render_template('index.html')
+
+
+@app.route('/register_user', methods=['POST'])
+def register():
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    username = request.form.get("username")
+    password = request.form.get("password")
+    email = request.form.get("email")
+
+    # Verify username isn't already in use
+    query = f"SELECT username FROM users where username='{username}';"
+    results = execute_query(query)
+    response = results.fetchall()
+
+    if len(response):
+        return render_template('index.html')
+    else:
+        admin = False
+        query = f"INSERT INTO users (first_name, last_name, username, password, email_address, admin) VALUES" \
+                f"('{first_name}', '{last_name}', '{username}', '{password}', '{email}', {admin});"
+
+        execute_query(query)
+
+        session.permanent = True
+        session['logged_in'] = True
+        session["username"] = username
+
+        return render_template('index.html')
 
 
 ####################################################################################
