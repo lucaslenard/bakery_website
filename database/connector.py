@@ -14,13 +14,7 @@ def connect_to_database():
 
 def execute_query(connection=None, query=None):
 
-    if connection is None:
-        print("No connection to the database found! Have you called connect_to_database() first?")
-        return None
-
-    if query is None or len(query.strip()) == 0:
-        print("query is empty! Please pass a SQL query in query")
-        return None
+    connection = connect_to_database()
 
     # Using tutorialspoint as a guide: https://www.tutorialspoint.com/python3/python_database_access.htm
     print(f"Executing %query: {query}")
@@ -33,5 +27,6 @@ def execute_query(connection=None, query=None):
     connection.commit()
 
     cursor.close()
+    connection.close()
 
     return cursor
