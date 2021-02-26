@@ -1,0 +1,63 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+<table class="table">
+    <tr>
+        {% for value in headers %}
+            <th>{{value}}</th>
+        {% endfor %}
+    </tr>
+
+    {% for key, value in data.items() %}
+        <tr>
+            {% for key, value in value.items() %}
+                <td id="{{ key }}">{{value}}</td>
+            {% endfor %}
+            <td>
+                {% if "view" in button %}
+                    <form action="/view_{{page}}" method="POST">
+                        <button value="{{key}}" name="view_item">View Order</button>
+                    </form>
+                {% endif %}
+                {% if "edit" in button %}
+                    <form action="/edit_{{page}}" method="POST">
+                        <button value="{{key}}" name="edit_item">Edit Item</button>
+                    </form>
+                {% endif %}
+                {% if "delete" in button %}
+                    <form action="/delete_{{page}}" method="POST">
+                        <button value="{{key}}" name="remove_item">Remove Item</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% if "add" in button %}
+<form action="/add_{{page}}" method="POST">
+    <table>
+        <tr>
+            {% for key, value in add.items() %}
+                <td>
+                    {% if value == "text" %}
+                        <input type="text" name="{{key}}" value>
+                    {% elif value == "date" %}
+                        <input type="date" name="{{key}}" value>
+                    {% elif value == "number" %}
+                        <input type="number" name="{{key}}" value>
+                    {% elif value == "checkbox" %}
+                        <input type="checkbox" name="{{key}}" value>
+                    {% endif %}
+                </td>
+            {% endfor %}
+            <td>
+                <button value="add_item" name="add_item">Add</button>
+            </td>
+        </tr>
+    </table>
+</form>
+{% endif %}
+
+{% endblock %}
