@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request
-from database.connector import connect_to_database, execute_query
+from database.connector import execute_query
 from database.data_handler import format_data
 
 app = Flask(__name__)
@@ -63,7 +63,7 @@ def add_payment_info():
     expiration_date = request.form.get("expiration_date")
 
     query = f"INSERT INTO payment_information (user_id, name, card_number, security_number, expiration_date) " \
-            f"VALUES ((SELECT id from users WHERE username='{username}'), '{name}', '{card_number}', '{security_number}', '{expiration_date}');"
+            f"VALUES ((SELECT id from users WHERE username='{username}'), '{name}', {int(card_number)}, {int(security_number)}, '{expiration_date}');"
 
     execute_query(query)
 
@@ -223,6 +223,17 @@ def enrolled_classes():
     return render_template('enrolled_classes.html', data=data)
 
 
+@app.route('/drop_class', methods=["POST"])
+def drop_enrolled_class():
+    class_id = request.form.get("drop_class")
+    print(class_id)
+    query = f"DELETE FROM enrollments WHERE id={int(class_id)}"
+
+    execute_query(query)
+
+    return redirect(request.referrer)
+
+
 ####################################################################################
 #
 # Edit Accounts page
@@ -276,10 +287,30 @@ def add_user_account():
 # Delete for Edit Accounts
 @app.route('/delete_edit_accounts', methods=["POST"])
 def delete_account():
-    item_id = request.form.get("remove_item")
+    user_id = request.form.get("remove_item")
 
-    query = f"DELETE FROM users WHERE id={int(item_id)};"
+    # In order to prevent null data from existing we need to delete all associated objects to the user
+    query = f"DELETE FROM addresses where user_id={int(user_id)};"
+    execute_query(query)
 
+    query = f"DELETE FROM payment_information where user_id={int(user_id)};"
+    execute_query(query)
+
+    query = f"DELETE FROM enrollments where user_id={int(user_id)};"
+    execute_query(query)
+
+    query = f"SELECT id FROM orders where user_id={int(user_id)};"
+    results = execute_query(query)
+    response = results.fetchall()
+
+    for order_id in response:
+        query = f"DELETE FROM order_items where order_id={int(order_id['id'])};"
+        execute_query(query)
+
+        query = f"DELETE FROM orders where id={int(order_id['id'])};"
+        execute_query(query)
+
+    query = f"DELETE FROM users WHERE id={int(user_id)};"
     execute_query(query)
 
     return redirect(request.referrer)
@@ -347,12 +378,13 @@ def add_new_product():
 # Delete for Edit Products
 @app.route('/delete_edit_products', methods=["POST"])
 def delete_product():
-    print("In the function")
     item_id = request.form.get("remove_item")
-    print(item_id)
+
+    # Need to safely delete all associated data - specifically any order_items that contain item
+    query = f"DELETE FROM order_items where item_id={int(item_id)};"
+    execute_query(query)
 
     query = f"DELETE FROM items WHERE id={int(item_id)};"
-
     execute_query(query)
 
     return redirect(request.referrer)
@@ -382,6 +414,37 @@ def admin_edit_classes():
     return render_template('tables.html', data=data, headers=headers, button=button, title=title, page=page, add=add)
 
 
+@app.route('/add_edit_classes', methods=["POST"])
+def add_class():
+    class_name = request.form.get("class_name")
+    date = request.form.get("date")
+    instructor = request.form.get("instructor")
+    seats = request.form.get("available_seats")
+    price = request.form.get("price")
+
+    query = f"INSERT INTO classes (class_name, date, instructor, available_seats, price) " \
+            f"VALUES ('{class_name}', '{date}', '{instructor}', {int(seats)}, {int(price)});"
+
+    execute_query(query)
+
+    return redirect(request.referrer)
+
+
+# Delete for Edit Classes
+@app.route('/delete_edit_classes', methods=["POST"])
+def delete_class():
+    class_id = request.form.get("remove_item")
+
+    # Need to safely delete all associated data - specifically any enrollments that contain this class
+    query = f"DELETE FROM enrollments where class_id={int(class_id)};"
+    execute_query(query)
+
+    query = f"DELETE FROM classes WHERE id={int(class_id)};"
+    execute_query(query)
+
+    return redirect(request.referrer)
+
+
 ####################################################################################
 #
 # Edit Orders page
@@ -405,6 +468,21 @@ def admin_edit_orders():
     page = "edit_orders"
 
     return render_template('tables.html', data=data, headers=headers, button=button, title=title, page=page)
+
+
+# Delete for Edit Orders
+@app.route('/delete_edit_orders', methods=["POST"])
+def delete_order():
+    order_id = request.form.get("remove_item")
+
+    # Need to safely delete all associated data - specifically any order_items that contain this order
+    query = f"DELETE FROM order_items where order_id={int(order_id)};"
+    execute_query(query)
+
+    query = f"DELETE FROM orders WHERE id={int(order_id)};"
+    execute_query(query)
+
+    return redirect(request.referrer)
 
 
 ####################################################################################
@@ -431,3 +509,14 @@ def admin_edit_enrollments():
     page = "edit_enrollments"
 
     return render_template('tables.html', data=data, headers=headers, button=button, title=title, page=page)
+
+
+# Delete for Edit Enrollments
+@app.route('/delete_edit_enrollments', methods=["POST"])
+def delete_enrollment():
+    enroll_id = request.form.get("remove_item")
+
+    query = f"DELETE FROM enrollments WHERE id={int(enroll_id)};"
+    execute_query(query)
+
+    return redirect(request.referrer)
