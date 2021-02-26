@@ -12,7 +12,7 @@ def connect_to_database():
     return connection
 
 
-def execute_query(connection=None, query=None):
+def execute_query(query=None):
 
     connection = connect_to_database()
 
