@@ -3,29 +3,17 @@
 {% block content %}
 
 <div class="add_customer_information">
-    <h1>Login - Selects information stored in customer table for authentication</h1>
-    <form class ="login_information" action method="POST" enctype="text/plain">
+    <h1>Login</h1>
+    <form action="/login_user" method="POST">
         <label for>Username:</label>
         <input type="text" name="username" value>
         <br>
         <br>
         <label for>Password:</label>
-        <input type="password" name="customer_password" value>
+        <input type="password" name="password" value>
         <br>
         <br>
-        <input type="submit" name>
-    </form>
-    <h1>Register - Adds user to customer table</h1>
-    <form class ="login_information" action method="POST" enctype="text/plain">
-        <label for>Username:</label>
-        <input type="text" name="username" value>
-        <br>
-        <br>
-        <label for>Password:</label>
-        <input type="password" name="customer_password" value>
-        <br>
-        <br>
-        <input type="submit" name>
+        <button type="submit" value="login" name="login">Login</button>
     </form>
 </div>
 

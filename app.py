@@ -1,11 +1,9 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from database.connector import execute_query
 from database.data_handler import format_data
 
 app = Flask(__name__)
-
-# TODO: Update to use the user_id from session
-username = "admin"
+app.secret_key = "secret_key_string"
 
 
 @app.route('/')
@@ -15,14 +13,45 @@ def index():
 
 ####################################################################################
 #
-# Login/Register page
+# Login/Register pages
 #
 ####################################################################################
-
-
-@app.route('/login_register')
-def user_login_register():
+@app.route('/login')
+def user_login():
     return render_template('login.html')
+
+
+@app.route('/register')
+def user_register():
+    return render_template('register.html')
+
+
+@app.route('/login_user', methods=['POST'])
+def login():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    print(request.form)
+
+    print(username)
+    print(password)
+
+    # Determine if the user exists
+    query = f"SELECT username, password FROM users where username='{username}';"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    # Verify a password match to create session
+    if "password" in response[0] and password == response[0]["password"]:
+        session.permanent = True
+        session['logged_in'] = True
+        session["username"] = username
+
+        return render_template('index.html')
+
+    # Add in an error message that username or password was incorrect
+
+    return render_template('index.html')
 
 
 ####################################################################################
@@ -34,6 +63,7 @@ def user_login_register():
 
 @app.route('/payment_information')
 def payment_info():
+    username = session["username"]
     query = f"SELECT * FROM payment_information WHERE user_id=(SELECT id from users WHERE username='{username}');"
 
     results = execute_query(query)
@@ -57,6 +87,7 @@ def edit_payment_info():
 
 @app.route('/add_payment_information', methods=["POST"])
 def add_payment_info():
+    username = session["username"]
     name = request.form.get("customer_name")
     card_number = request.form.get("card_number")
     security_number = request.form.get("security_number")
@@ -79,6 +110,7 @@ def add_payment_info():
 
 @app.route('/address_information')
 def address_info():
+    username = session["username"]
     query = f"SELECT * FROM addresses WHERE user_id=(SELECT id from users WHERE username='{username}');"
     results = execute_query(query)
     response = results.fetchall()
@@ -101,6 +133,7 @@ def edit_address_info():
 
 @app.route('/add_address_information', methods=["POST"])
 def add_address_info():
+    username = session["username"]
     street_address = request.form.get("street_address_1")
     secondary_street_address = request.form.get("street_address_2")
     city = request.form.get("city")
@@ -124,6 +157,7 @@ def add_address_info():
 
 @app.route('/previous_orders')
 def orders():
+    username = session["username"]
     query = f"SELECT * FROM orders WHERE user_id=(SELECT id from users WHERE username='{username}');"
 
     results = execute_query(query)
@@ -194,6 +228,7 @@ def load_classes():
 
 @app.route('/enroll_in_class', methods=["POST"])
 def enroll_class():
+    username = session["username"]
     class_id = request.form["enroll"]
     query = f"INSERT INTO enrollments (user_id, class_id, course_result) " \
             f"VALUES ((SELECT id from users WHERE username='{username}'), {int(class_id)}, 'Not Taken');"
@@ -212,6 +247,7 @@ def enroll_class():
 
 @app.route('/class_enrollments')
 def enrolled_classes():
+    username = session["username"]
     query = f"SELECT enrollments.id, enrollments.course_result, classes.class_name, classes.date, classes.instructor " \
             f"FROM enrollments INNER JOIN classes ON enrollments.class_id=classes.id " \
             f"WHERE enrollments.user_id=(SELECT id from users WHERE username='{username}');"
