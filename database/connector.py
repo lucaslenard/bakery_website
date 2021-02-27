@@ -25,7 +25,9 @@ def execute_query(query=None):
 
     # Using tutorialspoint as a guide: https://www.tutorialspoint.com/python3/python_database_access.htm
     print(f"Executing %query: {query}")
+    log.info(f"Executing query: {query}")
     cursor = connection.cursor(pymysql.cursors.DictCursor)
+    log.info(cursor)
 
     # TODO: Sanitize the query before executing it
     try:
