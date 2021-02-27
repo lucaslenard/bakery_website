@@ -1,9 +1,17 @@
+import logging
 from flask import Flask, render_template, redirect, request, session
 from database.connector import execute_query
 from database.data_handler import format_data
 
 app = Flask(__name__)
 app.secret_key = "secret_key_string"
+
+logging.basicConfig(filename='bakery.log',
+                    filemode='a',
+                    format='%(asctime)s - %(levelname)s - %(process)d - %(message)s',
+                    level=logging.INFO)
+
+log = logging.getLogger(__name__)
 
 
 @app.route('/')
@@ -13,7 +21,7 @@ def index():
 
 ####################################################################################
 #
-# Login/Register pages
+# Login/Register/Logout pages
 #
 ####################################################################################
 @app.route('/login')
@@ -578,6 +586,26 @@ def admin_edit_enrollments():
     page = "edit_enrollments"
 
     return render_template('tables.html', data=data, headers=headers, button=button, title=title, page=page)
+
+
+# Edit for Edit Enrollments
+@app.route('/edit_edit_enrollments', methods=["POST"])
+def edit_enrollment_page():
+    enroll_id = request.form.get("edit_item")
+
+    query = f"SELECT enrollments.course_result, classes.class_name, classes.date, classes.instructor, " \
+            f"users.first_name, users.last_name FROM enrollments " \
+            f"INNER JOIN classes ON enrollments.class_id=classes.id " \
+            f"INNER JOIN users ON enrollments.user_id=users.id" \
+            f"WHERE enrollments.id={int(enroll_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["class_name", "first_name", "last_name", "date", "instructor", "course_result"])
+
+    headers = ["Class Name", "First Name", "Last Name", "Class Date", "Instructor", "Course Result", "Action(s)"]
+    modify = {"class_name": "text", "date": "date", "instructor": "text", "available_seats": "number", "price": "number"}
 
 
 # Delete for Edit Enrollments

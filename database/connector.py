@@ -1,4 +1,7 @@
+import logging
 import pymysql
+
+log = logging.getLogger(__name__)
 
 
 def connect_to_database():
@@ -8,8 +11,12 @@ def connect_to_database():
     password = '9020'
     db = 'cs340_lenardl'
 
-    connection = pymysql.connect(host=hostname, user=username, password=password, database=db)
-    return connection
+    try:
+        connection = pymysql.connect(host=hostname, user=username, password=password, database=db)
+        return connection
+
+    except:
+        log.error("Issue when trying to connect to database", exc_info=True)
 
 
 def execute_query(query=None):
@@ -21,10 +28,13 @@ def execute_query(query=None):
     cursor = connection.cursor(pymysql.cursors.DictCursor)
 
     # TODO: Sanitize the query before executing it
-    cursor.execute(query)
+    try:
+        cursor.execute(query)
+        connection.commit()
 
-    # Used when doing an insert - might need to split up if it causes issues with reads
-    connection.commit()
+    except:
+        connection.rollback()
+        log.error(f"Issue when trying to run query: {query}", exc_info=True)
 
     cursor.close()
     connection.close()
