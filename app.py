@@ -144,9 +144,9 @@ def add_payment_info():
 
 @app.route('/delete_payment_info', methods=["POST"])
 def delete_payment_info():
-    payment_id = request.form.get("delete_payment_info")
+    payment_id = request.form.get("remove_payment")
 
-    query = f"DELETE FROM saved_payment_information where id={int(payment_id)};"
+    query = f"DELETE FROM payment_information where id={int(payment_id)};"
     execute_query(query)
 
     return redirect(request.referrer)
@@ -198,11 +198,11 @@ def add_address_info():
     return redirect(request.referrer)
 
 
-@app.route('/delete_address_information', methods=["POST"])
+@app.route('/delete_address_info', methods=["POST"])
 def delete_address_info():
-    address_id = request.form.get("delete_address_info")
+    address_id = request.form.get("remove_address")
 
-    query = f"DELETE FROM saved_address_information where address_id={int(address_id)};"
+    query = f"DELETE FROM addresses where id={int(address_id)};"
     execute_query(query)
 
     return redirect(request.referrer)
