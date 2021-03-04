@@ -142,6 +142,15 @@ def add_payment_info():
     return redirect(request.referrer)
 
 
+@app.route('/delete_payment_information', methods=["POST"])
+def delete_payment_info():
+    payment_id = request.form.get("delete_payment_info")
+
+    query = f"DELETE FROM saved_payment_information where payment_id={int(payment_id)};"
+    execute_query(query)
+
+    return redirect(request.referrer)
+
 ####################################################################################
 #
 # Saved Address Information page

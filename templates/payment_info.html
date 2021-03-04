@@ -5,7 +5,6 @@
     <p>If the user isn't logged in, they will not see any saved payments. Clicking select payment will select that info
         for the order. Selecting add payment will add to payment_information if the user is logged in</p>
 
-
 <table>
     <tr>
         <th>Full Name</th>
@@ -20,9 +19,15 @@
             <td id="{{ key }}">{{value}}</td>
         {% endfor %}
         <td>
-            <button value="{{ key }}" name="select_payment">Select Payment</button>
-            <button value="{{ key }}" name="edit_payment">Edit Payment</button>
-            <button value="{{ key }}" name="remove_payment">Remove Payment</button>
+            <form>
+                <button value="{{ key }}" name="select_payment">Select Payment</button>
+            </form>
+            <form action="/edit_payment_info" method="POST">
+                <button value="{{ key }}" name="edit_payment">Edit Payment</button>
+            </form>
+            <form action="/delete_payment_info" method="POST">
+                <button value="{{ key }}" name="remove_payment">Remove Payment</button>
+            </form>
         </td>
     </tr>
     {% endfor %}
@@ -48,5 +53,6 @@
         </tr>
     </table>
 </form>
+
 
 {% endblock %}
