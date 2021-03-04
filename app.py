@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session, url_for
 from database.connector import execute_query
 from database.data_handler import format_data
 
@@ -115,13 +115,13 @@ def payment_info():
     return render_template('payment_info.html', data=data)
 
 
-@app.route('/edit_payment_information')
+@app.route('/edit_payment_info', methods=['POST'])
 def edit_payment_info():
-    query = "SELECT id, user_id, name, card_number, security_code, expiration_date FROM payment_information;"
+    query = "SELECT id, user_id, name, card_number, security_number, expiration_date FROM payment_information;"
     results = execute_query(query)
     response = results.fetchall()
 
-    data = format_data(response, ["name", "card_number", "security_code", "expiration_date"])
+    data = format_data(response, ["name", "card_number", "security_number", "expiration_date"])
 
     return render_template('payment_info.html', data=data)
 
@@ -142,11 +142,11 @@ def add_payment_info():
     return redirect(request.referrer)
 
 
-@app.route('/delete_payment_information', methods=["POST"])
+@app.route('/delete_payment_info', methods=["POST"])
 def delete_payment_info():
     payment_id = request.form.get("delete_payment_info")
 
-    query = f"DELETE FROM saved_payment_information where payment_id={int(payment_id)};"
+    query = f"DELETE FROM saved_payment_information where id={int(payment_id)};"
     execute_query(query)
 
     return redirect(request.referrer)
@@ -379,6 +379,52 @@ def add_user_account():
     return redirect(request.referrer)
 
 
+# Edit for Edit Accounts
+@app.route('/edit_edit_accounts', methods=["POST"])
+def edit_account_page():
+    user_id = request.form.get("edit_item")
+
+    query = f"SELECT id, first_name, last_name, username, password, email_address, admin FROM users WHERE id={int(user_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["first_name", "last_name", "username", "password", "email_address", "admin"])
+    headers = ["First Name", "Last Name", "Username", "Password", "Email", "Admin", "Action(s)"]
+    page = "edit_accounts"
+    field_order = {"text", "text", "text", "text", "text", "checkbox"}
+
+    return render_template('edit_row.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+# Update for Edit Accounts
+@app.route('/post_edit_accounts', methods=["POST"])
+def post_edit_account_page():
+    user_id = request.form.get("save_item")
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    username = request.form.get("username")
+    password = request.form.get("password")
+    email = request.form.get("email_address")
+    checkbox = request.form.get("admin")
+
+    if checkbox is not None:
+        admin = True
+    else:
+        admin = False
+
+    if user_id is None:
+        return redirect(url_for("admin_edit_accounts"))
+
+    query = f"UPDATE users " \
+            f"SET first_name='{first_name}', last_name='{last_name}', username='{username}', " \
+            f"password='{password}', email_address='{email}', admin={admin}" \
+            f" WHERE id={int(user_id)};"
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_accounts"))
+
+
 # Delete for Edit Accounts
 @app.route('/delete_edit_accounts', methods=["POST"])
 def delete_account():
@@ -470,6 +516,66 @@ def add_new_product():
     return redirect(request.referrer)
 
 
+# Edit for Edit Products
+@app.route('/edit_edit_products', methods=["POST"])
+def edit_products_page():
+    product_id = request.form.get("edit_item")
+
+    query = f"SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
+            f"FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id WHERE items.id={int(product_id)};"
+    results = execute_query(query)
+    response = results.fetchall()
+    print(response)
+
+    data = format_data(response, ["product_name", "vendor_name", "price", "stock_quantity"])
+    headers = ["Product Name", "Vendor Name", "Price", "Quantity", "Action(s)"]
+    page = "edit_products"
+    field_order = {"text", "text", "number", "number"}
+
+    return render_template('edit_row.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+# Update for Edit Products
+@app.route('/post_edit_products', methods=["POST"])
+def post_edit_product_page():
+    product_id = request.form.get("save_item")
+    product_name = request.form.get("product_name")
+    vendor_name = request.form.get("vendor_name")
+    price = request.form.get("price")
+    quantity = request.form.get("stock_quantity")
+
+    if product_id is None:
+        return redirect(url_for("admin_edit_products"))
+
+    if vendor_name == "":
+        vendor_id = None or "NULL"
+        print("HERE")
+        query = f"UPDATE items SET " \
+                f"product_name='{product_name}', vendor_id={str(vendor_id)}, price={int(price)}, stock_quantity={int(quantity)} " \
+                f"WHERE id={int(product_id)};"
+
+    else:
+        query = f"SELECT id from vendors where vendor_name='{vendor_name}';"
+        results = execute_query(query)
+        vendor_id = results.fetchall()
+
+        if not vendor_id:
+            query = f"INSERT INTO vendors (vendor_name) VALUES ('{vendor_name}');"
+            execute_query(query)
+            query = f"SELECT id from vendors where vendor_name='{vendor_name}';"
+            results = execute_query(query)
+            vendor_id = results.fetchall()
+
+        vendor_id = vendor_id[0]["id"]
+        query = f"UPDATE items SET " \
+                f"product_name='{product_name}', vendor_id={int(vendor_id)}, price={int(price)}, stock_quantity={int(quantity)} " \
+                f"WHERE id={int(product_id)};"
+
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_products"))
+
+
 # Delete for Edit Products
 @app.route('/delete_edit_products', methods=["POST"])
 def delete_product():
@@ -523,6 +629,46 @@ def add_class():
     execute_query(query)
 
     return redirect(request.referrer)
+
+
+# Edit for Edit Classes
+@app.route('/edit_edit_classes', methods=["POST"])
+def edit_class_page():
+    class_id = request.form.get("edit_item")
+
+    query = f"SELECT id, class_name, date, instructor, available_seats, price FROM classes WHERE id={int(class_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["class_name", "date", "instructor", "available_seats", "price"])
+    headers = ["Class Name", "Class Date", "Instructor", "Available Seats", "Price", "Action(s)"]
+    page = "edit_classes"
+    field_order = {"text", "date", "text", "number", "number"}
+
+    return render_template('edit_row.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+# Update for Edit Classes
+@app.route('/post_edit_classes', methods=["POST"])
+def post_edit_class_page():
+    class_id = request.form.get("save_item")
+    class_name = request.form.get("class_name")
+    date = request.form.get("date")
+    instructor = request.form.get("instructor")
+    seats = request.form.get("available_seats")
+    price = request.form.get("price")
+
+    if class_id is None:
+        return redirect(url_for("admin_edit_classes"))
+
+    query = f"UPDATE classes " \
+            f"SET class_name='{class_name}', date='{date}', instructor='{instructor}', " \
+            f"available_seats={int(seats)}, price={int(price)}" \
+            f" WHERE id={int(class_id)};"
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_classes"))
 
 
 # Delete for Edit Classes
@@ -611,19 +757,32 @@ def admin_edit_enrollments():
 def edit_enrollment_page():
     enroll_id = request.form.get("edit_item")
 
-    query = f"SELECT enrollments.course_result, classes.class_name, classes.date, classes.instructor, " \
-            f"users.first_name, users.last_name FROM enrollments " \
-            f"INNER JOIN classes ON enrollments.class_id=classes.id " \
-            f"INNER JOIN users ON enrollments.user_id=users.id" \
-            f"WHERE enrollments.id={int(enroll_id)};"
+    query = f"SELECT id, course_result FROM enrollments WHERE enrollments.id={int(enroll_id)};"
 
     results = execute_query(query)
     response = results.fetchall()
 
-    data = format_data(response, ["class_name", "first_name", "last_name", "date", "instructor", "course_result"])
+    data = format_data(response, ["course_result"])
+    headers = ["Course Result", "Action(s)"]
+    page = "edit_enrollments"
+    field_order = {"text"}
 
-    headers = ["Class Name", "First Name", "Last Name", "Class Date", "Instructor", "Course Result", "Action(s)"]
-    modify = {"class_name": "text", "date": "date", "instructor": "text", "available_seats": "number", "price": "number"}
+    return render_template('edit_row.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+# Edit Post for Edit Enrollments
+@app.route('/post_edit_enrollments', methods=["POST"])
+def post_edit_enrollment_page():
+    enroll_id = request.form.get("save_item")
+    course_result = request.form.get("course_result")
+
+    if enroll_id is None:
+        return redirect(url_for("admin_edit_enrollments"))
+
+    query = f"UPDATE enrollments SET course_result='{course_result}' WHERE id={int(enroll_id)};"
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_enrollments"))
 
 
 # Delete for Edit Enrollments

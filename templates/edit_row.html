@@ -1,0 +1,27 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+<form action="/post_{{page}}" method="POST">
+    <table class="table">
+        <tr>
+            {% for value in headers %}
+                <th>{{value}}</th>
+            {% endfor %}
+        </tr>
+        {% for key, value in data.items() %}
+            <tr>
+                {% for key, value in value.items() %}
+                <td>
+                    <input name="{{key}}" type="text" value="{{value}}">
+                </td>
+                {% endfor %}
+                <td>
+                    <button value="{{key}}" name="cancel_item">Cancel Edit</button>
+                    <button value="{{key}}" name="save_item">Save Changes</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</form>
+{% endblock %}
+
