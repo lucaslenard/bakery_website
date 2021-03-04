@@ -20,9 +20,15 @@
             <td id="{{ key }}">{{value}}</td>
         {% endfor %}
         <td>
-            <button value="{{ key }}" name="select_address">Select Address</button>
-            <button value="{{ key }}" name="edit_address">Edit Address</button>
-            <button value="{{ key }}" name="remove_address">Remove Address</button>
+            <form>
+                <button value="{{ key }}" name="select_address">Select Address</button>
+            </form>
+            <form action="/edit_address_info" method="POST">
+                <button value="{{ key }}" name="edit_address">Edit Address</button>
+            </form>
+            <form action="/delete_address_info" method="POST">
+                <button value="{{ key }}" name="remove_address">Remove Address</button>
+            </form>
         </td>
     </tr>
     {% endfor %}

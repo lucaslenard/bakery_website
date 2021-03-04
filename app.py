@@ -198,6 +198,15 @@ def add_address_info():
     return redirect(request.referrer)
 
 
+@app.route('/delete_address_information', methods=["POST"])
+def delete_address_info():
+    address_id = request.form.get("delete_address_info")
+
+    query = f"DELETE FROM saved_address_information where address_id={int(address_id)};"
+    execute_query(query)
+
+    return redirect(request.referrer)
+
 ####################################################################################
 #
 # Previous Orders page
