@@ -236,8 +236,19 @@ def orders():
 ####################################################################################
 
 
-@app.route('/all_products')
+@app.route('/all_products', methods=["POST"])
 def load_products():
+    # grabbing the value from whatever the button name is for filter
+
+    # Perform an if statement similar to the one in admin_edit_products where it checks if value is None. If it is none
+    # then the page wasn't called by filter button and we return the select query that isn't filtering anything
+
+    # If the button value is not None then we know that a call was made to filter so we need to grab the filter value
+    # from the form and perform a query using the LIKE mysql verb
+
+    # Then in either case we can format data and render products.html
+    
+
     query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
             "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id;"
     results = execute_query(query)
