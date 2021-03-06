@@ -6,29 +6,35 @@
     <p>Clicking Checkout will add a row in orders for the overall order and will add rows to order_items equal to the
         number of unique items purchased. Clicking remove Item will remove from the session</p>
 
-<table>
-    <tr>
-        <th>Item Name</th>
-        <th>Vendor</th>
-        <th>Cost</th>
-        <th>Quantity in Cart</th>
-        <th>Action(s)</th>
-    </tr>
-    {% for key, value in data.items() %}
+<form action="/checkout" method="POST">
+    <table>
         <tr>
-            <td>{{ value }}</td>
-            <td>Acme Inc</td>
-            <td>$1.54</td>
-            <td>1</td>
+            <th>Item Name</th>
+            <th>Vendor</th>
+            <th>Cost</th>
+            <th>Quantity In Cart</th>
+            <th>Action(s)</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            {% for item_key, item_value in value.items() %}
+                {% if item_key == 'quantity' %}
+                    <td>
+                        <input type="number" size="8" name="{{key}}" value="{{item_value}}">
+                    </td>
+                {% else %}
+                    <td id="{{item_key}}">{{item_value}}</td>
+                {% endif %}
+
+            {% endfor %}
             <td>
-                <button value="{{ key }}" name="key">Update Item</button>
+                <button value="{{key}}" name="remove_item">Remove from Cart</button>
             </td>
         </tr>
-    {% endfor %}
-
-</table>
-
-<br>
-<button value="checkout" name="checkout">Checkout</button>
+        {% endfor %}
+    </table>
+    <br>
+    <button value="checkout" name="checkout">Checkout</button>
+</form>
 
 {% endblock %}

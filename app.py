@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from flask import Flask, render_template, redirect, request, session, url_for
 from database.connector import execute_query
 from database.data_handler import format_data
@@ -58,6 +59,7 @@ def login():
         session.permanent = True
         session['logged_in'] = True
         session["username"] = username
+        session["cart"] = {}
 
         return render_template('index.html')
 
@@ -91,6 +93,7 @@ def register():
         session.permanent = True
         session['logged_in'] = True
         session["username"] = username
+        session["cart"] = {}
 
         return render_template('index.html')
 
@@ -236,7 +239,7 @@ def orders():
 ####################################################################################
 
 
-@app.route('/all_products', methods=["POST"])
+@app.route('/all_products', methods=["GET", "POST"])
 def load_products():
     # grabbing the value from whatever the button name is for filter
 
@@ -247,7 +250,6 @@ def load_products():
     # from the form and perform a query using the LIKE mysql verb
 
     # Then in either case we can format data and render products.html
-    
 
     query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
             "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id;"
@@ -260,6 +262,21 @@ def load_products():
     return render_template('products.html', data=data)
 
 
+@app.route('/add_cart', methods=["POST"])
+def add_to_cart():
+    item_id = request.form.get("add_to_cart")
+    quantity = request.form.get(f"input_quantity {item_id}")
+
+    # Check to see if item was previously added to cart
+    if item_id in session["cart"]:
+        session["cart"][item_id] += int(quantity)
+
+    else:
+        session["cart"].update({item_id: int(quantity)})
+
+    print(session["cart"])
+    return redirect(request.referrer)
+
 ####################################################################################
 #
 # Shopping Cart page
@@ -268,15 +285,97 @@ def load_products():
 
 
 @app.route('/shopping_cart')
-def cart():
-    # TODO: Need to update to utilize session to pull ids
-    items = {
-        "donuts": "Donuts",
-        "bread": "Bread",
-        "hamburger_buns": "Hamburger Buns"
-    }
-    return render_template('shopping_cart.html', data=items)
+def shop_cart():
 
+    cart = {}
+
+    for key, value in session["cart"].items():
+        query = f"SELECT items.id, items.product_name, items.price, vendors.vendor_name " \
+                f"FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id WHERE items.id={int(key)};"
+        results = execute_query(query)
+        response = results.fetchall()
+
+        data = format_data(response, ["product_name", "vendor_name", "price"])
+
+        data[key].update({"quantity": str(value)})
+        print(data)
+        cart.update(data)
+
+    print(cart)
+
+    return render_template('shopping_cart.html', data=cart)
+
+
+@app.route('/checkout', methods=["POST"])
+def check_out():
+
+    print(request.form)
+
+    item_id = request.form.get("remove_item")
+
+    if item_id is None:
+        parameters = request.form.to_dict()
+        del parameters["checkout"]
+
+        if len(parameters):
+
+            total_price = 0
+
+            for key, value in parameters.items():
+                print(key)
+                print(value)
+
+                # Get the item price to add to total price
+                query = f"SELECT price FROM items WHERE id={int(key)};"
+                results = execute_query(query)
+                response = results.fetchall()
+
+                total_price += (response[0]["price"] * int(value))
+
+            # Create order
+            username = session["username"]
+            fulfilled = False
+            date = datetime.today().strftime('%Y-%m-%d')
+            query = f"INSERT INTO orders (user_id, date, fulfilled, total_cost) VALUES " \
+                    f"((SELECT id from users WHERE username='{username}'), DATE '{date}', {fulfilled}, {total_price});"
+
+            execute_query(query)
+
+            # Get most recent order_id for use in creating the individual order_items entries
+            query = f"SELECT MAX(id) FROM orders WHERE user_id=(SELECT id from users WHERE username='{username}');"
+            results = execute_query(query)
+            response = results.fetchall()
+            order_id = response[0]["MAX(id)"]
+            print(response)
+
+            for key, value in parameters.items():
+                query = f"INSERT INTO order_items (order_id, item_id, quantity) VALUES " \
+                        f"({order_id}, {int(key)}, {int(value)});"
+
+                execute_query(query)
+
+            # Empty the session shopping cart
+            session["cart"] = {}
+            
+            return redirect(url_for("orders"))
+
+        else:
+            return redirect(url_for("shop_cart"))
+
+    else:
+        remove_item(item_id)
+        return redirect(url_for("shop_cart"))
+
+
+@app.route('/remove_item', methods=["POST"])
+def remove_item(item_id):
+
+    if item_id is None:
+        check_out(request.form)
+
+    del session["cart"][item_id]
+
+    return redirect(url_for("shop_cart"))
 
 ####################################################################################
 #

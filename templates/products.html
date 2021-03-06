@@ -8,26 +8,30 @@
 <input type="text" placeholder="Filter">
 <button value="filter_products" name="filter">Filter Results</button>
 <p>
-<table>
-    <tr>
-        <th>Item Name</th>
-        <th>Vendor</th>
-        <th>Cost</th>
-        <th>Quantity Available</th>
-        <th>Quantity To Order</th>
-        <th>Action(s)</th>
-    </tr>
-    {% for key, value in data.items() %}
-    <tr>
-        {% for key, value in value.items() %}
+<form action="/add_cart" method="POST">
+    <table>
+        <tr>
+            <th>Item Name</th>
+            <th>Vendor</th>
+            <th>Cost</th>
+            <th>Quantity Available</th>
+            <th>Quantity To Order</th>
+            <th>Action(s)</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            {% for key, value in value.items() %}
             <td id="{{ key }}">{{value}}</td>
+            {% endfor %}
+            <td>
+                <input type="number" size="8" placeholder="1" name="input_quantity {{key}}" value>
+            </td>
+            <td>
+                <button value="{{key}}" name="add_to_cart">Add to Cart</button>
+            </td>
+        </tr>
         {% endfor %}
-
-        <td><input type="text" size="8" placeholder="1" name="input_quantity"/></td>
-        <td><button value="{{ key }}" name="key">Add to Cart</button></td>
-    </tr>
-    {% endfor %}
-
-</table>
+    </table>
+</form>
 
 {% endblock %}
