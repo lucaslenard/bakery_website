@@ -836,6 +836,46 @@ def admin_edit_orders():
     return render_template('tables.html', data=data, headers=headers, button=button, title=title, page=page)
 
 
+# Edit for Edit Orders
+@app.route('/edit_edit_orders', methods=["POST"])
+def edit_orders_page():
+    order_id = request.form.get("edit_item")
+
+    query = f"SELECT id, date, fulfilled, total_cost FROM orders WHERE id={int(order_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["date", "total_cost", "fulfilled"])
+    headers = ["Date", "Total Cost", "Fulfilled", "Action(s)"]
+    page = "edit_orders"
+    field_order = {"date", "number", "checkbox"}
+
+    return render_template('edit_row.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+# Edit Post for Edit Orders
+@app.route('/post_edit_orders', methods=["POST"])
+def post_edit_orders_page():
+    order_id = request.form.get("save_item")
+    date = request.form.get("date")
+    total_cost = request.form.get("total_cost")
+    fulfilled_status = request.form.get("fulfilled")
+
+    if order_id is None:
+        return redirect(url_for("admin_edit_orders"))
+
+    if fulfilled_status == "1":
+        fulfilled = True
+    else:
+        fulfilled = False
+
+    query = f"UPDATE orders SET date='{date}', total_cost={int(total_cost)}, fulfilled={fulfilled} WHERE id={int(order_id)};"
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_orders"))
+
+
 # Delete for Edit Orders
 @app.route('/delete_edit_orders', methods=["POST"])
 def delete_order():
@@ -882,7 +922,7 @@ def admin_edit_enrollments():
 def edit_enrollment_page():
     enroll_id = request.form.get("edit_item")
 
-    query = f"SELECT id, course_result FROM enrollments WHERE enrollments.id={int(enroll_id)};"
+    query = f"SELECT id, course_result FROM enrollments WHERE id={int(enroll_id)};"
 
     results = execute_query(query)
     response = results.fetchall()
