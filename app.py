@@ -890,6 +890,76 @@ def delete_order():
 
     return redirect(request.referrer)
 
+####################################################################################
+#
+# Edit Order Items page
+#
+####################################################################################
+
+
+@app.route('/view_edit_orders', methods=["GET", "POST"])
+def view_order_item():
+    order_id = request.form.get("view_item")
+
+    query = f"SELECT order_items.id, order_items.quantity, items.product_name, items.price FROM order_items " \
+            f"LEFT OUTER JOIN items ON order_items.item_id=items.id " \
+            f"WHERE order_items.order_id={int(order_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["product_name", "price", "quantity"])
+
+    headers = ["Product Name", "Price", "Quantity", "Action(s)"]
+    button = ["edit", "delete"]
+    title = f"Admin Tools - Order Items - Order Number {order_id}"
+    page = "edit_order_items"
+
+    return render_template('tables.html', data=data, headers=headers, button=button, title=title, page=page)
+
+
+# Edit for Edit Order Items
+@app.route('/edit_edit_order_items', methods=["POST"])
+def edit_order_items_page():
+    order_id = request.form.get("edit_item")
+
+    query = f"SELECT id, quantity FROM order_items WHERE id={int(order_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["quantity"])
+    headers = ["Quantity", "Action(s)"]
+    page = "edit_order_items"
+    field_order = {"number"}
+
+    return render_template('edit_row.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+# Edit Post for Edit Order Items
+@app.route('/post_edit_order_items', methods=["POST"])
+def post_edit_order_items_page():
+    order_id = request.form.get("save_item")
+    quantity = request.form.get("quantity")
+
+    if order_id is None:
+        return redirect(url_for("admin_edit_orders"))
+
+    query = f"UPDATE order_items SET quantity={int(quantity)} WHERE id={int(order_id)};"
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_orders"))
+
+
+# Delete for Edit Order Items
+@app.route('/delete_edit_order_items', methods=["POST"])
+def delete_order_item():
+    order_items_id = request.form.get("remove_item")
+
+    query = f"DELETE FROM order_items where id={int(order_items_id)};"
+    execute_query(query)
+
+    return redirect(url_for("admin_edit_orders"))
 
 ####################################################################################
 #
