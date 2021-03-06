@@ -212,7 +212,7 @@ def delete_address_info():
 
 ####################################################################################
 #
-# Previous Orders page
+# Previous Orders page and sub-page Order Items
 #
 ####################################################################################
 
@@ -227,9 +227,24 @@ def orders():
 
     # TODO: Fix the format_data to replace boolean with checkbox somehow?
     data = format_data(response, ["id", "date", "total_cost", "fulfilled"])
-    # TODO: Add in links to orders and utilize redirect with the order_id
 
     return render_template('order_history.html', data=data)
+
+
+@app.route('/individual_order_items', methods=["POST"])
+def ind_items():
+    order_id = request.form.get("view_item")
+
+    query = f"SELECT order_items.id, order_items.quantity, items.product_name, items.price FROM order_items " \
+            f"LEFT OUTER JOIN items ON order_items.item_id=items.id " \
+            f"WHERE order_items.order_id={int(order_id)};"
+
+    results = execute_query(query)
+    response = results.fetchall()
+
+    data = format_data(response, ["product_name", "price", "quantity"])
+
+    return render_template('view_order_items.html', data=data)
 
 
 ####################################################################################
@@ -356,7 +371,7 @@ def check_out():
 
             # Empty the session shopping cart
             session["cart"] = {}
-            
+
             return redirect(url_for("orders"))
 
         else:

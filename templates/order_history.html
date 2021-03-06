@@ -6,23 +6,26 @@
     <p>Clicking View Order Information will load a separate page with all the order items for that order pulled in from
     the order_items table</p>
 
-
-<table>
-    <tr>
-        <th>Order Number</th>
-        <th>Ordered Date</th>
-        <th>Total Cost</th>
-        <th>Fulfilled</th>
-        <th>Actions</th>
-    </tr>
-    {% for key, value in data.items() %}
-    <tr>
-        {% for key, value in value.items() %}
-            <td id="{{ key }}">{{value}}</td>
+<form action="/individual_order_items" method="POST">
+    <table>
+        <tr>
+            <th>Order Number</th>
+            <th>Ordered Date</th>
+            <th>Total Cost</th>
+            <th>Fulfilled</th>
+            <th>Actions</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            {% for key, value in value.items() %}
+                <td id="{{ key }}">{{value}}</td>
+            {% endfor %}
+            <td>
+                <button value="{{key}}" name="view_item">View Order Items</button>
+            </td>
+        </tr>
         {% endfor %}
-        <td><button value="{{ key }}" name="key">View Order Items</button></td>
-    </tr>
-    {% endfor %}
-</table>
+    </table>
+</form>
 
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends "sidebar.html" %}
+
+{% block content %}
+
+    <h1>Items in Order - Select query against order_items table which will display all items in order</h1>
+
+<table>
+    <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Quantity Ordered</th>
+    </tr>
+    {% for key, value in data.items() %}
+    <tr>
+        {% for key, value in value.items() %}
+        <td id="{{ key }}">{{value}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
