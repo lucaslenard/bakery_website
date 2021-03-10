@@ -118,15 +118,21 @@ def payment_info():
     return render_template('payment_info.html', data=data)
 
 
-@app.route('/edit_payment_info', methods=['POST'])
-def edit_payment_info():
-    query = "SELECT id, user_id, name, card_number, security_number, expiration_date FROM payment_information;"
+@app.route('/edit_payment_info', methods=["POST"])
+def edit_payment_information():
+    payment_id = request.form.get("edit_payment")
+
+    query = f"SELECT id, user_id, name, card_number, security_number, expiration_date FROM payment_information WHERE id={int(payment_id)};"
+
     results = execute_query(query)
     response = results.fetchall()
 
     data = format_data(response, ["name", "card_number", "security_number", "expiration_date"])
+    headers = ["Name", "Card Number", "Security Number", "Expiration Date"]
+    page = "payment_info"
+    field_order = {"text", "text", "text", "date"}
 
-    return render_template('payment_info.html', data=data)
+    return render_template('payment_info.html', data=data, headers=headers, page=page, field_order=field_order)
 
 
 @app.route('/add_payment_information', methods=["POST"])
@@ -173,15 +179,21 @@ def address_info():
     return render_template('address_info.html', data=data)
 
 
-@app.route('/edit_address_information')
-def edit_address_info():
-    query = "SELECT id, user_id, street_address, secondary_street_address, city, state, zip_code;"
+@app.route('/edit_address_info', methods=["POST"])
+def edit_address_information():
+    address_id = request.form.get("edit_address")
+
+    query = f"SELECT id, user_id, street_address, secondary_street_address, city, state, zip_code FROM payment_information WHERE id={int(address_id)};"
+
     results = execute_query(query)
     response = results.fetchall()
 
     data = format_data(response, ["street_address", "secondary_street_address", "city", "state", "zip_code"])
+    headers = ["Street Address", "Street Address 2", "City", "State", "Zip Code"]
+    page = "address_info"
+    field_order = {"text", "text", "text", "text", "text"}
 
-    return render_template('address_info.html', data=data)
+    return render_template('address_info.html', data=data, headers=headers, page=page, field_order=field_order)
 
 
 @app.route('/add_address_information', methods=["POST"])
@@ -258,11 +270,26 @@ def ind_items():
 def load_products():
     # grabbing the value from whatever the button name is for filter
 
+    filter_value = request.form.get("filter")
+
     # Perform an if statement similar to the one in admin_edit_products where it checks if value is None. If it is none
     # then the page wasn't called by filter button and we return the select query that isn't filtering anything
 
-    # If the button value is not None then we know that a call was made to filter so we need to grab the filter value
-    # from the form and perform a query using the LIKE mysql verb
+    if filter_value is not None:
+
+        # If the button value is not None then we know that a call was made to filter so we need to grab the filter value
+        # from the form and perform a query using the LIKE mysql verb
+
+        filter_data = request.form.get("product_filter")
+        query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
+            "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id WHERE items.id, items.product_name, " \
+            f"items.price, items.stock_quantity, vendors.vendor_name LIKE '{filter_data}';"
+        results = execute_query(query)
+        response = results.fetchall()
+
+        data = format_data(response, ["product_name", "vendor_name", "price", "stock_quantity"])
+
+        return render_template('products.html', data=data)
 
     # Then in either case we can format data and render products.html
 
@@ -401,6 +428,30 @@ def remove_item(item_id):
 
 @app.route('/classes')
 def load_classes():
+    # grabbing the value from whatever the button name is for filter
+
+    filter_value = request.form.get("filter")
+
+    # Perform an if statement similar to the one in admin_edit_products where it checks if value is None. If it is none
+    # then the page wasn't called by filter button and we return the select query that isn't filtering anything
+
+    if filter_value is not None:
+
+        # If the button value is not None then we know that a call was made to filter so we need to grab the filter value
+        # from the form and perform a query using the LIKE mysql verb
+
+        filter_data = request.form.get("classes_filter")
+        query = "SELECT id, class_name, date, instructor, available_seats, price FROM classes WHERE id, class_name, " \
+                f"date, instructor, available_seats, price LIKE '{filter_value}';"
+        results = execute_query(query)
+        response = results.fetchall()
+
+        data = format_data(response, ["class_name", "date", "instructor", "available_seats", "price"])
+
+        return render_template('classes.html', data=data)
+
+    # Then in either case we can format data and render products.html
+
     query = "SELECT id, class_name, date, instructor, available_seats, price FROM classes;"
     results = execute_query(query)
     response = results.fetchall()
