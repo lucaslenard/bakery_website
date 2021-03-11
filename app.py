@@ -132,7 +132,27 @@ def edit_payment_information():
     page = "payment_info"
     field_order = {"text", "text", "text", "date"}
 
-    return render_template('payment_info.html', data=data, headers=headers, page=page, field_order=field_order)
+    return render_template('edit_payment_info.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+@app.route('/post_payment_info', methods=["POST"])
+def post_payment_info():
+    payment_id = request.form.get("save_item")
+    name = request.form.get("name")
+    card_number = request.form.get("card_number")
+    security_number = request.form.get("security_number")
+    date = request.form.get("expiration_date")
+
+    if payment_id is None:
+        return redirect(url_for("payment_info"))
+
+    query = f"UPDATE payment_information SET " \
+            f"name='{name}', card_number={int(card_number)}, security_number={int(security_number)}, expiration_date='{date}' " \
+            f"WHERE id={int(payment_id)};"
+
+    execute_query(query)
+
+    return redirect(url_for("payment_info"))
 
 
 @app.route('/add_payment_information', methods=["POST"])

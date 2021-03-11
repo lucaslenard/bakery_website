@@ -19,9 +19,6 @@
             <td id="{{ key }}">{{value}}</td>
         {% endfor %}
         <td>
-            <form>
-                <button value="{{ key }}" name="select_payment">Select Payment</button>
-            </form>
             <form action="/edit_payment_info" method="POST">
                 <button value="{{ key }}" name="edit_payment">Edit Payment</button>
             </form>
