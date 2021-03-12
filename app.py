@@ -203,7 +203,8 @@ def address_info():
 def edit_address_information():
     address_id = request.form.get("edit_address")
 
-    query = f"SELECT id, user_id, street_address, secondary_street_address, city, state, zip_code FROM payment_information WHERE id={int(address_id)};"
+    query = f"SELECT id, user_id, street_address, secondary_street_address, city, state, zip_code " \
+            f"FROM addresses WHERE id={int(address_id)};"
 
     results = execute_query(query)
     response = results.fetchall()
@@ -213,7 +214,29 @@ def edit_address_information():
     page = "address_info"
     field_order = {"text", "text", "text", "text", "text"}
 
-    return render_template('address_info.html', data=data, headers=headers, page=page, field_order=field_order)
+    return render_template('edit_address_info.html', data=data, headers=headers, page=page, field_order=field_order)
+
+
+@app.route('/post_address_info', methods=["POST"])
+def post_address_info():
+    address_id = request.form.get("save_item")
+    street_address = request.form.get("street_address")
+    secondary_street_address = request.form.get("secondary_street_address")
+    city = request.form.get("city")
+    state = request.form.get("state")
+    zip_code = request.form.get("zip_code")
+
+    if address_id is None:
+        return redirect(url_for("address_info"))
+
+    query = f"UPDATE addresses SET " \
+            f"street_address='{street_address}', secondary_street_address='{secondary_street_address}', " \
+            f"city='{city}', state='{state}', zip_code='{zip_code}' " \
+            f"WHERE id={int(address_id)};"
+
+    execute_query(query)
+
+    return redirect(url_for("address_info"))
 
 
 @app.route('/add_address_information', methods=["POST"])
