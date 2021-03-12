@@ -6,10 +6,11 @@ log = logging.getLogger(__name__)
 
 def connect_to_database():
 
+    # Hardcode Credentials in order to connect to database
     hostname = 'classmysql.engr.oregonstate.edu'
-    username = 'cs340_lenardl'
-    password = '9020'
-    db = 'cs340_lenardl'
+    username = ''
+    password = ''
+    db = ''
 
     try:
         connection = pymysql.connect(host=hostname, user=username, password=password, database=db)
