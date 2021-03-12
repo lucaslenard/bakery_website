@@ -314,6 +314,7 @@ def load_products():
     # grabbing the value from whatever the button name is for filter
 
     filter_value = request.form.get("filter")
+    filter_text = request.form.get("filter_text")
 
     # Perform an if statement similar to the one in admin_edit_products where it checks if value is None. If it is none
     # then the page wasn't called by filter button and we return the select query that isn't filtering anything
@@ -323,10 +324,10 @@ def load_products():
         # If the button value is not None then we know that a call was made to filter so we need to grab the filter value
         # from the form and perform a query using the LIKE mysql verb
 
-        filter_data = request.form.get("product_filter")
-        query = "SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name " \
-            "FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id WHERE items.id, items.product_name, " \
-            f"items.price, items.stock_quantity, vendors.vendor_name LIKE '{filter_data}';"
+        query = f"SELECT items.id, items.product_name, items.price, items.stock_quantity, vendors.vendor_name" \
+                f" FROM items LEFT OUTER JOIN vendors ON items.vendor_id=vendors.id WHERE items.product_name LIKE " \
+                f"'%{filter_text}%' OR vendors.vendor_name LIKE '%{filter_text}%';"
+
         results = execute_query(query)
         response = results.fetchall()
 
@@ -469,11 +470,12 @@ def remove_item(item_id):
 ####################################################################################
 
 
-@app.route('/classes')
+@app.route('/classes', methods=["GET", "POST"])
 def load_classes():
     # grabbing the value from whatever the button name is for filter
 
     filter_value = request.form.get("filter")
+    filter_text = request.form.get("filter_text")
 
     # Perform an if statement similar to the one in admin_edit_products where it checks if value is None. If it is none
     # then the page wasn't called by filter button and we return the select query that isn't filtering anything
@@ -483,9 +485,9 @@ def load_classes():
         # If the button value is not None then we know that a call was made to filter so we need to grab the filter value
         # from the form and perform a query using the LIKE mysql verb
 
-        filter_data = request.form.get("classes_filter")
-        query = "SELECT id, class_name, date, instructor, available_seats, price FROM classes WHERE id, class_name, " \
-                f"date, instructor, available_seats, price LIKE '{filter_value}';"
+        query = f"SELECT * FROM classes WHERE class_name LIKE '%{filter_text}%' OR " \
+                f"date LIKE '%{filter_text}%' OR instructor LIKE '%{filter_text}%';"
+
         results = execute_query(query)
         response = results.fetchall()
 

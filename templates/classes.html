@@ -5,9 +5,9 @@
     <h1>All Available Classes - Select query against Classes table</h1>
     <p>Clicking Enroll will add row to enrollments table</p>
 
-<form action="/classes" name="classes_filter">
-    <input type="text" placeholder="Filter">
-    <button value="filter_classes" name="filter">Filter Results</button>
+<form action="/classes" method="POST">
+    <input name= filter_text type="text" placeholder="Filter">
+    <button value="filter" name="filter">Filter Results</button>
 </form>
 <p>
 <form action="/enroll_in_class" method="POST">
